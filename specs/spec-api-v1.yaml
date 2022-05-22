@@ -1,0 +1,614 @@
+openapi: 3.0.4
+info:
+  title: Finances
+  description: 'Системы учета финансов: 
+возможность хранения актуального состояния и истории изменения счетов, возможность получения отчетов по изменениям счетов за период.'
+  version: 1.0.0
+servers:
+  - url: http://localhost/finances-api
+tags:
+  - name: account
+    description: Счёт
+  - name: operation
+    description: Операция по счёту
+paths:
+  /account/create:
+    post:
+      tags:
+        - account
+      summary: Create Account
+      operationId: AccountCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountCreateResponse'
+  /account/read:
+    post:
+      tags:
+        - account
+      summary: Read Account
+      operationId: AccountRead
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountReadResponse'
+  /account/update:
+    post:
+      tags:
+        - account
+      summary: Update Account
+      operationId: AccountUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountUpdateResponse'
+  /account/delete:
+    post:
+      tags:
+        - account
+      summary: Delete Account
+      operationId: AccountDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDeleteResponse'
+  /account/search:
+    post:
+      tags:
+        - account
+      summary: Search Account
+      operationId: AccountSearch
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountSearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountSearchResponse'
+  /account/history:
+    post:
+      tags:
+        - account
+      summary: Account history
+      operationId: AccountHistory
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountHistoryRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountHistoryResponse'
+
+  /operation/create:
+    post:
+      tags:
+        - operation
+      summary: Create Operation
+      operationId: OperationCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationCreateResponse'
+
+  /operation/read:
+    post:
+      tags:
+        - operation
+      summary: Read Operation
+      operationId: OperationRead
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationReadResponse'
+  /operation/update:
+    post:
+      tags:
+        - operation
+      summary: Update Operation
+      operationId: OperationUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationUpdateResponse'
+  /operation/delete:
+    post:
+      tags:
+        - operation
+      summary: Delete Operation
+      operationId: OperationDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationDeleteResponse'
+
+components:
+  schemas:
+
+    RequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/Debug'
+
+    Debug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/RequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/RequestDebugStubs'
+
+    RequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    RequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badUserId
+        - badName
+        - badDescription
+        - badAccountId
+        - badAmount
+        - badFromAccountId
+        - badToAccountId
+        - badOperationDateTime
+        - badOperationId
+        - cannotDelete
+        - badSearchFilter
+        - badFromDateTime
+        - badToDateTime
+
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+
+    SearchFilterObj:
+      type: object
+      description: Фильтр поиска - строка
+      properties:
+        SearchFilter:
+          type: string
+          description: Поисковая строка, которая будет искаться в названии и описании
+
+    HistoryFilterObj:
+      type: object
+      description: Фильтр поиска - промежуток времени
+      properties:
+        fromDateTime:
+          type: string
+          description: Начало промежутка - Датавремя операции в формате  yyyyMMddHHmmss, например 20220222220000 -> 22:00:00 22.02.2022
+        toDateTime:
+          type: string
+          description: Конец промежутка - Датавремя операции в формате  yyyyMMddHHmmss, например 20220222220000 -> 22:00:00 22.02.2022
+
+
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: accountCreate
+      discriminator:
+        propertyName: requestType
+        mapping:
+          accountCreate: '#/components/schemas/AccountCreateRequest'
+          accountRead: '#/components/schemas/AccountReadRequest'
+          accountUpdate: '#/components/schemas/AccountUpdateRequest'
+          accountDelete: '#/components/schemas/AccountDeleteRequest'
+          accountSearch: '#/components/schemas/AccountSearchRequest'
+          accountHistory: '#/components/schemas/AccountHistoryRequest'
+          operationCreate: '#/components/schemas/OperationCreateRequest'
+          operationRead: '#/components/schemas/OperationReadRequest'
+          operationUpdate: '#/components/schemas/OperationUpdateRequest'
+          operationDelete: '#/components/schemas/OperationDeleteRequest'
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: accountCreate
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      discriminator:
+        propertyName: responseType
+        mapping:
+          accountCreate: '#/components/schemas/AccountCreateResponse'
+          accountRead: '#/components/schemas/AccountReadResponse'
+          accountUpdate: '#/components/schemas/AccountUpdateResponse'
+          accountDelete: '#/components/schemas/AccountDeleteResponse'
+          accountSearch: '#/components/schemas/AccountSearchResponse'
+          accountHistory: '#/components/schemas/AccountHistoryResponse'
+          operationCreate: '#/components/schemas/OperationCreateResponse'
+          operationRead: '#/components/schemas/OperationReadResponse'
+          operationUpdate: '#/components/schemas/OperationUpdateResponse'
+          operationDelete: '#/components/schemas/OperationDeleteResponse'
+
+    AccountData:
+      type: object
+      description:  Данные счёта
+      properties:
+        UserId:
+          type: string
+          description: Идентификатор пользователя
+        Name:
+          type: string
+          description: Название счёта
+        Description:
+          type: string
+          description: Описание счёта
+
+    AccountDataObj:
+      type: object
+      description:  Счёт - только данные
+      properties:
+        account:
+          $ref: '#/components/schemas/AccountData'
+
+
+    AccountId:
+      type: object
+      description: Идентификатор счёта
+      properties:
+        AccountId:
+          type: string
+          description: Идентификатор счёта
+
+    AccountIdObj:
+      type: object
+      description: Счёт - только идентификатор
+      properties:
+        account:
+          $ref: '#/components/schemas/AccountId'
+
+    Account:
+      allOf:
+        - $ref: '#/components/schemas/AccountData'
+        - $ref: '#/components/schemas/AccountId'
+      description: Счёт
+
+    AccountObj:
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Account'
+      description: Счёт
+
+
+    OperationData:
+      type: object
+      description:  Данные операции
+      properties:
+        UserId:
+          type: string
+          description: Идентификатор пользователя
+        Description:
+          type: string
+          description: Описание операции
+        Amount:
+          type: string
+          description: Сумма операции
+        FromAccountId:
+          type: string
+          description: Идентификатор счёта откуда
+        ToAccountId:
+          type: string
+          description: Идентификатор счёта куда
+        OperationDateTime:
+          type: string
+          description: Датавремя операции в формате  yyyyMMddHHmmss, например 20220222220000 -> 22:00:00 22.02.2022
+
+    OperationDataObj:
+      type: object
+      description:  Операция - только данные
+      properties:
+        operation:
+          $ref: '#/components/schemas/OperationData'
+
+
+    OperationId:
+      type: object
+      description: Идентификатор операции
+      properties:
+        OperationId:
+          type: string
+          description: Идентификатор операции
+
+    OperationIdObj:
+      type: object
+      description: Операция - только идентификатор
+      properties:
+        operation:
+          $ref: '#/components/schemas/OperationId'
+
+    Operation:
+      allOf:
+        - $ref: '#/components/schemas/OperationData'
+        - $ref: '#/components/schemas/OperationId'
+      description: Операция
+
+    OperationObj:
+      type: object
+      properties:
+        operation:
+          $ref: '#/components/schemas/Operation'
+      description: Операция
+
+
+    AccountCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/AccountDataObj'
+      description: Запрос создания счёта
+
+    AccountReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/AccountIdObj'
+      description: Запрос чтения счёта
+
+    AccountUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/AccountObj'
+      description: Запрос изменения счёта
+
+    AccountDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/AccountIdObj'
+      description: Запрос удаления счёта
+
+    AccountSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - type: object
+          properties:
+            searchFilter:
+              $ref: '#/components/schemas/SearchFilterObj'
+      description: Запрос поиска счёта
+
+    AccountHistoryRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/AccountIdObj'
+        - type: object
+          properties:
+            historyFilter:
+              $ref: '#/components/schemas/HistoryFilterObj'
+
+
+    AccountCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/AccountObj'
+      description: Ответ запроса на создание счёта
+
+    AccountReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/AccountObj'
+      description: Ответ запроса на чтение счёта
+
+    AccountUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/AccountObj'
+      description: Ответ запроса на изменение счёта
+
+    AccountDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+      description: Ответ запроса на удаление счёта
+
+    AccountSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          properties:
+            accounts:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountObj'
+      description: Ответ запроса на поиск счёта
+
+    AccountHistoryResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          properties:
+            operations:
+              type: array
+              items:
+                $ref: '#/components/schemas/OperationObj'
+      description: Ответ запроса на поиск операций по счету
+
+
+    OperationCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/OperationDataObj'
+      description: Запрос создания операции
+
+    OperationReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/OperationIdObj'
+      description: Запрос чтения операции
+
+    OperationUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/OperationObj'
+      description: Запрос изменения операции
+
+    OperationDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/OperationIdObj'
+      description: Запрос удаления операции
+
+
+    OperationCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/OperationObj'
+      description: Ответ запроса на создание операции
+
+    OperationReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/OperationObj'
+      description: Ответ запроса на чтение операции
+
+    OperationUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/OperationObj'
+      description: Ответ запроса на изменение операции
+
+    OperationDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+      description: Ответ запроса на удаление операции
