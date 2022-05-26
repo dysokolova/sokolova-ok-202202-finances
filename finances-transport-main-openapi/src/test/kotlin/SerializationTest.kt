@@ -18,7 +18,8 @@ class SerializationTest {
             account = AccountData(
                 userId = "1",
                 name = "Тинёк-осн",
-                description = "основной счет в Тинькофф"
+                description = "основной счет в Тинькофф",
+                amount = "0.0"
             )
         )
         val jsonString = jacksonMapper.writeValueAsString(createRequest)

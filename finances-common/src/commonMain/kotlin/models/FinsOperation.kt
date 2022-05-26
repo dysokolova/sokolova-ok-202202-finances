@@ -9,5 +9,5 @@ data class FinsOperation(
     var fromAccountId: FinsAccountId = FinsAccountId.NONE,
     var toAccountId: FinsAccountId = FinsAccountId.NONE,
     var operationDateTime:  LocalDateTime = LocalDateTime.MIN,
-    val operationId: FinsOperationId = FinsOperationId.NONE,
+    var operationId: FinsOperationId = FinsOperationId.NONE,
 )
