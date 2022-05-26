@@ -10,7 +10,8 @@ class SerializationResponseTest {
         account = Account(
             userId = "1",
             name = "Тинёк-осн",
-            description = "основной счет в Тинькофф"
+            description = "основной счет в Тинькофф",
+            amount = "0.0"
         )
     )
 
@@ -30,6 +31,7 @@ class SerializationResponseTest {
         assertEquals("1", decoded.account?.userId)
         assertEquals("Тинёк-осн", decoded.account?.name)
         assertEquals("основной счет в Тинькофф", decoded.account?.description)
+        assertEquals("0.0", decoded.account?.amount)
     }
 
     @Test
@@ -40,5 +42,6 @@ class SerializationResponseTest {
         assertEquals("1", decoded.account?.userId)
         assertEquals("Тинёк-осн", decoded.account?.name)
         assertEquals("основной счет в Тинькофф", decoded.account?.description)
+        assertEquals("0.0", decoded.account?.amount)
     }
 }

@@ -20,7 +20,8 @@ class MapperTest {
             account = AccountData(
                 userId = "1",
                 name = "Тинёк-осн",
-                description = "основной счет в Тинькофф"
+                description = "основной счет в Тинькофф",
+                amount = "0.0"
             )
         )
 
@@ -42,7 +43,8 @@ class MapperTest {
             accountResponse = FinsAccount(
                 userId = FinsUserId("1"),
                 name = "Тинёк-осн",
-                description = "основной счет в Тинькофф"
+                description = "основной счет в Тинькофф",
+                amount = 0.0,
             ),
             errors = mutableListOf(
                 FinsError(
@@ -60,6 +62,7 @@ class MapperTest {
         assertEquals("1234", req.requestId)
         assertEquals("Тинёк-осн", req.account?.name)
         assertEquals("основной счет в Тинькофф", req.account?.description)
+        assertEquals("0.0", req.account?.amount)
         assertEquals(1, req.errors?.size)
         assertEquals("err", req.errors?.firstOrNull()?.code)
         assertEquals("request", req.errors?.firstOrNull()?.group)

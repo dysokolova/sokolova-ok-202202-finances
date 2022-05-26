@@ -147,12 +147,14 @@ private fun Account.toInternal(): FinsAccount = FinsAccount(
     userId = this.userId.toUserId(),
     description = this.description ?: "",
     name = this.name ?: "",
+    amount = this.amount?.toDouble() ?: 0.0,
     accountId = this.accountId.toAccountId(),
 )
 private fun AccountData.toInternal(): FinsAccount = FinsAccount(
     userId = this.userId.toUserId(),
     name = this.name ?: "",
     description = this.description ?: "",
+    amount = this.amount?.toDouble() ?: 0.0,
 )
 private fun Operation.toInternal(): FinsOperation = FinsOperation(
     userId = this.userId.toUserId(),

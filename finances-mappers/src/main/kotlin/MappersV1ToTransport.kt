@@ -92,6 +92,7 @@ private fun FinsAccount.toTransport(): Account = Account(
    userId = userId.takeIf { it != FinsUserId.NONE }?.asString(),
     name = name.takeIf { it.isNotBlank() },
     description = description.takeIf { it.isNotBlank() },
+    amount = amount.takeIf { !it.isNaN() }?.toString(),
     accountId = accountId.takeIf { it != FinsAccountId.NONE }?.asString(),
 )
 
@@ -109,7 +110,7 @@ fun List<FinsAccount>.toTransport(): List<AccountObj>? = this
 private fun FinsOperation.toTransport(): Operation = Operation(
     userId = userId.takeIf { it != FinsUserId.NONE }?.asString(),
     description = description.takeIf { it.isNotBlank() },
-    amount = description.takeIf { it.isNotBlank() },
+    amount = amount.takeIf { !it.isNaN() }?.toString(),
     fromAccountId = fromAccountId.takeIf { it != FinsAccountId.NONE }?.asString(),
     toAccountId = toAccountId.takeIf { it != FinsAccountId.NONE }?.asString(),
     operationDateTime = operationDateTime.format(DATE_TIME_FORMATTER).takeIf { it.isNotBlank() },

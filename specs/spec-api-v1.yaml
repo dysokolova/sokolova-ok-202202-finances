@@ -368,6 +368,9 @@ components:
         Description:
           type: string
           description: Описание счёта
+        Amount:
+          type: string
+          description: Сумма на счёте
 
     AccountDataObj:
       type: object

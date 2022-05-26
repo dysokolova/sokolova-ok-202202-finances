@@ -4,5 +4,6 @@ data class FinsAccount(
     var userId: FinsUserId = FinsUserId.NONE,
     var name: String = "",
     var description: String = "",
-    val accountId: FinsAccountId = FinsAccountId.NONE,
+    var amount: Double = Double.NaN,
+    var accountId: FinsAccountId = FinsAccountId.NONE,
 )
