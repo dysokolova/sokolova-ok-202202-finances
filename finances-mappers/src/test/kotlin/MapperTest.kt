@@ -21,7 +21,7 @@ class MapperTest {
                 userId = "1",
                 name = "Тинёк-осн",
                 description = "основной счет в Тинькофф",
-                amount = "0.0"
+                amount = "10.0"
             )
         )
 
@@ -32,6 +32,7 @@ class MapperTest {
         assertEquals(FinsWorkMode.STUB, context.workMode)
         assertEquals("1",  context.accountRequest.userId.asString())
         assertEquals("Тинёк-осн", context.accountRequest.name)
+        assertEquals(10.0, context.accountRequest.amount)
         assertEquals("основной счет в Тинькофф", context.accountRequest.description)
     }
 
@@ -44,7 +45,7 @@ class MapperTest {
                 userId = FinsUserId("1"),
                 name = "Тинёк-осн",
                 description = "основной счет в Тинькофф",
-                amount = 0.0,
+                amount = 120.0,
             ),
             errors = mutableListOf(
                 FinsError(
@@ -62,7 +63,7 @@ class MapperTest {
         assertEquals("1234", req.requestId)
         assertEquals("Тинёк-осн", req.account?.name)
         assertEquals("основной счет в Тинькофф", req.account?.description)
-        assertEquals("0.0", req.account?.amount)
+        assertEquals("120.0", req.account?.amount)
         assertEquals(1, req.errors?.size)
         assertEquals("err", req.errors?.firstOrNull()?.code)
         assertEquals("request", req.errors?.firstOrNull()?.group)
