@@ -12,9 +12,20 @@ pluginManagement {
         kotlin("plugin.serialization") version kotlinVersion apply false
 
         id("org.openapi.generator") version openapiVersion apply false
+
+        // spring
+        val springBootVersion: String by settings
+        val springDependencyVersion: String by settings
+        val springPluginVersion: String by settings
+
+        id("org.springframework.boot") version springBootVersion
+        id("io.spring.dependency-management") version springDependencyVersion
+        kotlin("plugin.spring") version springPluginVersion
     }
 }
 
 include("finances-transport-main-openapi")
 include("finances-common")
 include("finances-mappers")
+include("finances-stubs")
+include("finances-app-spring")

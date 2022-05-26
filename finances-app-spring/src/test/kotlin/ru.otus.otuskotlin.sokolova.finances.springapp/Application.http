@@ -1,0 +1,101 @@
+
+### Send POST request account/create
+POST http://localhost:8080/v1/account/create
+Content-Type: application/json
+
+{
+  "requestId": "string",
+  "requestType": "accountCreate",
+  "debug": {
+    "mode": "stub",
+    "stub": "success"
+  },
+  "account": {
+    "UserId": "string",
+    "Name": "string",
+    "Description": "string",
+    "Amount": "100.0"
+  }
+}
+
+<> 2022-05-26T222422.200.json
+<> 2022-05-26T214711.200.json
+
+### Send POST request account/update
+POST http://localhost:8080/v1/account/update
+Content-Type: application/json
+
+{
+"requestId": "string",
+"requestType": "accountUpdate",
+"debug": {
+  "mode": "test",
+  "stub": "success"
+},
+"account": {
+"UserId": "123",
+"Name": "string",
+"Description": "string",
+"Amount": "100.0",
+"AccountId": "1"
+}
+}
+
+<> 2022-05-26T222439.200.json
+<> 2022-05-26T222434.200.json
+<> 2022-05-26T222308.200.json
+<> 2022-05-26T222217.405.json
+<> 2022-05-26T222208.405.json
+<> 2022-05-26T222205.405.json
+<> 2022-05-26T221727.405.json
+<> 2022-05-26T221723.405.json
+<> 2022-05-26T221703.405.json
+<> 2022-05-26T220332.405.json
+<> 2022-05-26T220209.405.json
+<> 2022-05-26T220140.405.json
+<> 2022-05-26T220136.405.json
+
+
+
+
+### Send POST request account/search
+POST http://localhost:8080/v1/account/search
+Content-Type: application/json
+
+{
+"requestId": "string",
+"requestType": "accountSearch",
+"debug": {
+"mode": "stub",
+"stub": "success"
+},
+"searchFilter": {
+"SearchFilter": "string"
+}
+}
+
+<> 2022-05-26T221716.200.json
+<> 2022-05-26T214640.200.json
+
+
+### Send POST request account/history
+POST http://localhost:8080/v1/account/history
+Content-Type: application/json
+
+{
+  "requestId": "string",
+  "requestType": "accountHistory",
+  "debug": {
+    "mode": "stub",
+    "stub": "success"
+  },
+  "account": {
+    "AccountId": "string"
+  },
+  "historyFilter": {
+    "fromDateTime": "20220212120000",
+    "toDateTime": "20230212120000"
+  }
+}
+
+<> 2022-05-26T214653.200.json
