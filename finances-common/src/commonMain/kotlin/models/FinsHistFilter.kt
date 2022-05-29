@@ -1,9 +1,8 @@
 package ru.otus.otuskotlin.sokolova.finances.common.models
-
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.Instant
+import ru.otus.otuskotlin.sokolova.finances.common.NONE
 
 data class FinsHistFilter(
-    var fromDateTime: LocalDateTime = LocalDateTime.MIN,
-    var toDateTime: LocalDateTime = LocalDateTime.MIN,
+    var fromDateTime: Instant = Instant.NONE,
+    var toDateTime: Instant = Instant.NONE,
 )

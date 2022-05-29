@@ -1,12 +1,12 @@
 package ru.otus.otuskotlin.sokolova.finances.mappers.v1
 
 import ru.otus.otuskotlin.sokolova.finances.api.v1.models.*
-import ru.otus.otuskotlin.sokolova.finances.common.DATE_TIME_FORMATTER
 import ru.otus.otuskotlin.sokolova.finances.common.FinsContext
 import ru.otus.otuskotlin.sokolova.finances.common.models.*
 import ru.otus.otuskotlin.sokolova.finances.common.stubs.FinsStubs
 import ru.otus.otuskotlin.sokolova.finances.mappers.v1.exceptions.UnknownRequestClass
-import java.time.LocalDateTime
+import kotlinx.datetime.Instant
+import ru.otus.otuskotlin.sokolova.finances.common.NONE
 
 fun FinsContext.fromTransport(request: IRequest) = when(request){
     is AccountCreateRequest -> fromTransport(request)
@@ -140,8 +140,8 @@ private fun SearchFilterObj?.toInternal(): FinsSrchFilter = FinsSrchFilter(
     searchFilter = this?.searchFilter ?: ""
 )
 private fun HistoryFilterObj?.toInternal(): FinsHistFilter = FinsHistFilter(
-    fromDateTime = LocalDateTime.parse(this?.fromDateTime, DATE_TIME_FORMATTER) ?:LocalDateTime.MIN,
-    toDateTime = LocalDateTime.parse(this?.toDateTime, DATE_TIME_FORMATTER) ?:LocalDateTime.MIN,
+    fromDateTime = this?.fromDateTime?.let { Instant.parse(it) } ?:Instant.NONE,
+    toDateTime = this?.toDateTime?.let { Instant.parse(it) } ?:Instant.NONE,
 )
 private fun Account.toInternal(): FinsAccount = FinsAccount(
     userId = this.userId.toUserId(),
@@ -162,7 +162,7 @@ private fun Operation.toInternal(): FinsOperation = FinsOperation(
     amount = this.amount?.toDouble() ?: 0.0,
     fromAccountId = this.fromAccountId.toAccountId(),
     toAccountId = this.toAccountId.toAccountId(),
-    operationDateTime = LocalDateTime.parse(this.operationDateTime, DATE_TIME_FORMATTER) ?:LocalDateTime.MIN,
+    operationDateTime = this.operationDateTime?.let { Instant.parse(it) } ?:Instant.NONE,
     operationId = this.operationId.toOperationId(),
 )
 private fun OperationData.toInternal(): FinsOperation = FinsOperation(
@@ -171,5 +171,5 @@ private fun OperationData.toInternal(): FinsOperation = FinsOperation(
     amount = (this.amount)?.toDouble() ?: 0.0,
     fromAccountId = this.fromAccountId.toAccountId(),
     toAccountId = this.toAccountId.toAccountId(),
-    operationDateTime = LocalDateTime.parse(this.operationDateTime, DATE_TIME_FORMATTER) ?:LocalDateTime.MIN,
+    operationDateTime = this.operationDateTime?.let { Instant.parse(it) } ?:Instant.NONE,
 )

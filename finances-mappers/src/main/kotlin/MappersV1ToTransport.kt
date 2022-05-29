@@ -1,10 +1,11 @@
 package ru.otus.otuskotlin.sokolova.finances.mappers.v1
 
 import ru.otus.otuskotlin.sokolova.finances.api.v1.models.*
-import ru.otus.otuskotlin.sokolova.finances.common.DATE_TIME_FORMATTER
 import ru.otus.otuskotlin.sokolova.finances.common.FinsContext
 import ru.otus.otuskotlin.sokolova.finances.common.models.*
 import ru.otus.otuskotlin.sokolova.finances.mappers.v1.exceptions.UnknownFinsCommand
+import kotlinx.datetime.Instant
+import ru.otus.otuskotlin.sokolova.finances.common.NONE
 
 fun FinsContext.toTransport(): IResponse = when (val cmd = command) {
     FinsCommand.ACCOUNTCREATE -> toTransportAccountCreate()
@@ -113,7 +114,7 @@ private fun FinsOperation.toTransport(): Operation = Operation(
     amount = amount.takeIf { !it.isNaN() }?.toString(),
     fromAccountId = fromAccountId.takeIf { it != FinsAccountId.NONE }?.asString(),
     toAccountId = toAccountId.takeIf { it != FinsAccountId.NONE }?.asString(),
-    operationDateTime = operationDateTime.format(DATE_TIME_FORMATTER).takeIf { it.isNotBlank() },
+    operationDateTime = operationDateTime.takeIf { it != Instant.NONE }?.toString(),
     operationId = operationId.takeIf { it != FinsOperationId.NONE }?.asString(),
 )
 
