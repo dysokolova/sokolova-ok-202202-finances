@@ -11,7 +11,7 @@ object AccountStub {
         name = "Тинёк-осн",
         description = "основной счет в Тинькофф",
         amount = 120.0,
-        accountId = FinsAccountId("1")
+        accountId = FinsAccountId("123")
     )
 
     private fun stub2() = FinsAccount(

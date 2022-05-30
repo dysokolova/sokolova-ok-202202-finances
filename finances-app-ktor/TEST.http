@@ -1,0 +1,74 @@
+### Send POST request account/create
+POST http://localhost:8080/v1/account/create
+Content-Type: application/json
+
+{
+  "requestId": "string",
+  "requestType": "accountCreate",
+  "debug": {
+    "mode": "stub",
+    "stub": "success"
+  },
+  "account": {
+    "UserId": "string",
+    "Name": "string",
+    "Description": "string",
+    "Amount": "100.0"
+  }
+}
+
+### Send POST request account/update
+POST http://localhost:8080/v1/account/update
+Content-Type: application/json
+
+{
+"requestId": "string",
+"requestType": "accountUpdate",
+"debug": {
+  "mode": "test",
+  "stub": "success"
+},
+"account": {
+"UserId": "123",
+"Name": "string",
+"Description": "string",
+"Amount": "100.0",
+"AccountId": "1"
+}
+}
+
+### Send POST request account/search
+POST http://localhost:8080/v1/account/search
+Content-Type: application/json
+
+{
+"requestId": "string",
+"requestType": "accountSearch",
+"debug": {
+"mode": "stub",
+"stub": "success"
+},
+"searchFilter": {
+"SearchFilter": "string"
+}
+}
+
+### Send POST request account/history
+POST http://localhost:8080/v1/account/history
+Content-Type: application/json
+
+{
+  "requestId": "string",
+  "requestType": "accountHistory",
+  "debug": {
+    "mode": "stub",
+    "stub": "success"
+  },
+  "account": {
+    "AccountId": "string"
+  },
+  "historyFilter": {
+    "fromDateTime": "2010-06-01T22:19:44.475Z",
+    "toDateTime": "2010-06-01T22:19:44.475Z"
+  }
+}
