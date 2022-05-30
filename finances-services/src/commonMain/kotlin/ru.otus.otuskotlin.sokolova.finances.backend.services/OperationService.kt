@@ -1,15 +1,10 @@
-package ru.otus.otuskotlin.sokolova.finances.springapp.api.v1.service
+package ru.otus.otuskotlin.sokolova.finances.backend.services
 
-import org.springframework.stereotype.Service
-import ru.otus.otuskotlin.sokolova.finances.springapp.api.v1.*
-import ru.otus.otuskotlin.sokolova.finances.common.*
+import ru.otus.otuskotlin.sokolova.finances.common.FinsContext
 import ru.otus.otuskotlin.sokolova.finances.common.models.*
-import ru.otus.otuskotlin.sokolova.finances.common.stubs.*
-import ru.otus.otuskotlin.sokolova.finances.stubs.*
-import ru.otus.otuskotlin.sokolova.finances.springapp.common.*
+import ru.otus.otuskotlin.sokolova.finances.common.stubs.FinsStubs
+import ru.otus.otuskotlin.sokolova.finances.stubs.OperationStub
 
-
-@Service
 class OperationService {
 
 
@@ -24,20 +19,20 @@ class OperationService {
         }
     }
 
-    fun operationRead(finsContext: FinsContext): FinsContext {
+    fun operationRead(finsContext: FinsContext, buildError: () -> FinsError): FinsContext {
         val requestedId = finsContext.operationRequest.operationId
 
         return when (finsContext.stubCase) {
             FinsStubs.SUCCESS -> finsContext.successResponse {
                 operationResponse = OperationStub.getModel().apply { this.operationId = requestedId }
             }
-            else -> finsContext.errorResponse {
+            else -> finsContext.errorResponse(buildError)  {
                 it.copy(field = "operation.operationId", message = notFoundError(requestedId.asString()))
             }
         }
     }
 
-    fun operationUpdate(context: FinsContext) = when (context.stubCase) {
+    fun operationUpdate(context: FinsContext, buildError: () -> FinsError) = when (context.stubCase) {
         FinsStubs.SUCCESS -> context.successResponse {
             operationResponse =
                 OperationStub.getModel {
@@ -46,17 +41,17 @@ class OperationService {
                     if (operationRequest.operationId != FinsOperationId.NONE) operationId = operationRequest.operationId
                 }
         }
-        else -> context.errorResponse {
+        else -> context.errorResponse(buildError)  {
             it.copy(field = "operation.operationId", message = notFoundError(context.operationRequest.operationId.asString()))
         }
     }
 
 
-    fun operationDelete(context: FinsContext) = when (context.stubCase) {
+    fun operationDelete(context: FinsContext, buildError: () -> FinsError) = when (context.stubCase) {
         FinsStubs.SUCCESS -> context.successResponse {
             operationResponse = OperationStub.getModel { operationId = context.operationRequest.operationId }
         }
-        else -> context.errorResponse {
+        else -> context.errorResponse(buildError)  {
             it.copy(
                 field = "operation.operationId",
                 message = notFoundError(context.operationRequest.operationId.asString())

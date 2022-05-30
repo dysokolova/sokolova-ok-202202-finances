@@ -293,10 +293,10 @@ components:
       properties:
         fromDateTime:
           type: string
-          description: Начало промежутка - Датавремя операции в формате  yyyyMMddHHmmss, например 20220222220000 -> 22:00:00 22.02.2022
+          description: Начало промежутка - Датавремя операции в формате формате ISO-8601, например 2010-06-01T22:19:44.475Z
         toDateTime:
           type: string
-          description: Конец промежутка - Датавремя операции в формате  yyyyMMddHHmmss, например 20220222220000 -> 22:00:00 22.02.2022
+          description: Конец промежутка - Датавремя операции в формате ISO-8601, например 2010-06-01T22:19:44.475Z
 
 
     IRequest:
@@ -430,7 +430,7 @@ components:
           description: Идентификатор счёта куда
         OperationDateTime:
           type: string
-          description: Датавремя операции в формате  yyyyMMddHHmmss, например 20220222220000 -> 22:00:00 22.02.2022
+          description: Датавремя операции в формате ISO-8601, например 2010-06-01T22:19:44.475Z
 
     OperationDataObj:
       type: object

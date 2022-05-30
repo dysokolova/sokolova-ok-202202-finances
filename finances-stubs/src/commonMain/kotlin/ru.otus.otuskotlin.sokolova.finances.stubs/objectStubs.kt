@@ -1,6 +1,8 @@
 package ru.otus.otuskotlin.sokolova.finances.stubs
+
+import kotlinx.datetime.Clock
 import ru.otus.otuskotlin.sokolova.finances.common.models.*
-import java.time.LocalDateTime
+import kotlinx.datetime.Instant
 
 
 object AccountStub {
@@ -9,7 +11,7 @@ object AccountStub {
         name = "Тинёк-осн",
         description = "основной счет в Тинькофф",
         amount = 120.0,
-        accountId = FinsAccountId("1")
+        accountId = FinsAccountId("123")
     )
 
     private fun stub2() = FinsAccount(
@@ -47,7 +49,7 @@ object OperationStub {
         amount = 10.0,
         fromAccountId = FinsAccountId("1"),
         toAccountId = FinsAccountId("2"),
-        operationDateTime = LocalDateTime.now(),
+        operationDateTime = Clock.System.now(),
         operationId = FinsOperationId("111")
     )
 
@@ -57,7 +59,7 @@ object OperationStub {
         amount = 20.0,
         fromAccountId = FinsAccountId("1"),
         toAccountId = FinsAccountId("2"),
-        operationDateTime = LocalDateTime.now(),
+        operationDateTime = Clock.System.now(),
         operationId = FinsOperationId("222")
     )
 

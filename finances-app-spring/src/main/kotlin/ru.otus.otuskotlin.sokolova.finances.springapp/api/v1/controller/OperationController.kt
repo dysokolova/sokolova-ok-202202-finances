@@ -1,10 +1,11 @@
 package ru.otus.otuskotlin.sokolova.finances.springapp.api.v1.controller
 
 import org.springframework.web.bind.annotation.*
-import ru.otus.otuskotlin.sokolova.finances.springapp.api.v1.service.OperationService
+import ru.otus.otuskotlin.sokolova.finances.backend.services.OperationService
 import ru.otus.otuskotlin.sokolova.finances.api.v1.models.*
 import ru.otus.otuskotlin.sokolova.finances.common.FinsContext
 import ru.otus.otuskotlin.sokolova.finances.mappers.v1.*
+import ru.otus.otuskotlin.sokolova.finances.springapp.api.v1.buildError
 
 @RestController
 @RequestMapping("v1/operation")
@@ -20,19 +21,19 @@ class OperationController (
     @PostMapping("read")
     fun operationRead(@RequestBody operationReadRequest: OperationReadRequest) =
         FinsContext().apply { fromTransport(operationReadRequest)}.let {
-            operationService.operationRead(it)
+            operationService.operationRead(it, ::buildError)
         }.toTransportOperationRead()
 
     @PostMapping("update")
     fun operationUpdate(@RequestBody operationUpdateRequest: OperationUpdateRequest) =
         FinsContext().apply { fromTransport(operationUpdateRequest) }.let {
-            operationService.operationUpdate(it)
+            operationService.operationUpdate(it, ::buildError)
         }.toTransportOperationUpdate()
 
     @PostMapping("delete")
     fun operationDelete(@RequestBody operationDeleteRequest: OperationDeleteRequest) =
         FinsContext().apply { fromTransport(operationDeleteRequest) }.let {
-            operationService.operationDelete(it)
+            operationService.operationDelete(it, ::buildError)
         }.toTransportOperationDelete()
 
 }

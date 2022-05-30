@@ -12,7 +12,9 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
 
+                // transport models
                 implementation(project(":finances-common"))
+                implementation(project(":finances-stubs"))
             }
         }
         val commonTest by getting {

@@ -1,15 +1,12 @@
-package ru.otus.otuskotlin.sokolova.finances.springapp.api.v1.service
+package ru.otus.otuskotlin.sokolova.finances.backend.services
 
-import org.springframework.stereotype.Service
-import ru.otus.otuskotlin.sokolova.finances.springapp.api.v1.*
-import ru.otus.otuskotlin.sokolova.finances.common.*
+import ru.otus.otuskotlin.sokolova.finances.common.FinsContext
 import ru.otus.otuskotlin.sokolova.finances.common.models.*
-import ru.otus.otuskotlin.sokolova.finances.common.stubs.*
-import ru.otus.otuskotlin.sokolova.finances.stubs.*
-import ru.otus.otuskotlin.sokolova.finances.springapp.common.*
+import ru.otus.otuskotlin.sokolova.finances.common.stubs.FinsStubs
+import ru.otus.otuskotlin.sokolova.finances.stubs.AccountStub
+import ru.otus.otuskotlin.sokolova.finances.stubs.OperationStub
 
 
-@Service
 class AccountService {
 
 
@@ -24,20 +21,20 @@ class AccountService {
         }
     }
 
-    fun accountRead(finsContext: FinsContext): FinsContext {
+    fun accountRead(finsContext: FinsContext, buildError: () -> FinsError): FinsContext {
         val requestedId = finsContext.accountRequest.accountId
 
         return when (finsContext.stubCase) {
             FinsStubs.SUCCESS -> finsContext.successResponse {
                 accountResponse = AccountStub.getModel().apply { this.accountId = requestedId }
             }
-            else -> finsContext.errorResponse {
+            else -> finsContext.errorResponse(buildError)  {
                 it.copy(field = "account.accountId", message = notFoundError(requestedId.asString()))
             }
         }
     }
 
-    fun accountUpdate(context: FinsContext)   = when (context.stubCase) {
+    fun accountUpdate(context: FinsContext, buildError: () -> FinsError)   = when (context.stubCase) {
         FinsStubs.SUCCESS -> context.successResponse {
             accountResponse =
                 AccountStub.getModel() {
@@ -47,17 +44,17 @@ class AccountService {
                     if (accountRequest.accountId != FinsAccountId.NONE) accountId = accountRequest.accountId
                 }
         }
-        else -> context.errorResponse {
+        else -> context.errorResponse(buildError)  {
             it.copy(field = "account.accountId", message = notFoundError(context.accountRequest.accountId.asString()))
         }
     }
 
 
-    fun accountDelete(context: FinsContext) = when (context.stubCase) {
+    fun accountDelete(context: FinsContext, buildError: () -> FinsError) = when (context.stubCase) {
         FinsStubs.SUCCESS -> context.successResponse {
             accountResponse = AccountStub.getModel { accountId = context.accountRequest.accountId }
         }
-        else -> context.errorResponse {
+        else -> context.errorResponse(buildError)  {
             it.copy(
                 field = "account.accountId",
                 message = notFoundError(context.accountRequest.accountId.asString())
@@ -65,7 +62,7 @@ class AccountService {
         }
     }
 
-    fun accountSearch(context: FinsContext): FinsContext {
+    fun accountSearch(context: FinsContext, buildError: () -> FinsError): FinsContext {
         val accountFilterRequest = context.accountFilterRequest
 
         val searchFilter = accountFilterRequest.searchFilter
@@ -76,7 +73,7 @@ class AccountService {
                     AccountStub.getModels()
                 )
             }
-            else -> context.errorResponse {
+            else -> context.errorResponse(buildError)  {
                 it.copy(
                     message = "Nothing found by $searchFilter"
                 )
@@ -84,7 +81,7 @@ class AccountService {
         }
     }
 
-    fun accountHistory(context: FinsContext): FinsContext  {
+    fun accountHistory(context: FinsContext, buildError: () -> FinsError): FinsContext  {
         val accountHistoryRequest = context.accountHistoryRequest
 
         val fromDateTime = accountHistoryRequest.fromDateTime
@@ -96,7 +93,7 @@ class AccountService {
                     OperationStub.getModels()
                 )
             }
-            else -> context.errorResponse {
+            else -> context.errorResponse(buildError)  {
                 it.copy(
                     message = "Nothing found from $fromDateTime to $toDateTime"
                 )

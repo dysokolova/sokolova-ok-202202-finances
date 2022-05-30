@@ -23,12 +23,18 @@ dependencies {
     implementation(project(":finances-transport-main-openapi"))
     implementation(project(":finances-common"))
     implementation(project(":finances-mappers"))
+
+    // Services
+    implementation(project(":finances-services"))
+
+    // Stubs
     implementation(project(":finances-stubs"))
 
     // tests
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-webflux") // Controller, Service, etc..
     testImplementation("com.ninja-squad:springmockk:3.0.1") // mockking beans
 }
 
