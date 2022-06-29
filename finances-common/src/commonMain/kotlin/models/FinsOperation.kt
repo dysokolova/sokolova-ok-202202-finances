@@ -1,6 +1,7 @@
 package ru.otus.otuskotlin.sokolova.finances.common.models
 
-import java.time.LocalDateTime
+import kotlinx.datetime.Instant
+import ru.otus.otuskotlin.sokolova.finances.common.NONE
 
 data class FinsOperation(
     var userId: FinsUserId = FinsUserId.NONE,
@@ -8,6 +9,6 @@ data class FinsOperation(
     var amount: Double = Double.NaN,
     var fromAccountId: FinsAccountId = FinsAccountId.NONE,
     var toAccountId: FinsAccountId = FinsAccountId.NONE,
-    var operationDateTime:  LocalDateTime = LocalDateTime.MIN,
+    var operationDateTime:  Instant = Instant.NONE,
     var operationId: FinsOperationId = FinsOperationId.NONE,
 )
