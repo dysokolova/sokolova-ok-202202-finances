@@ -18,8 +18,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.slf4j.event.Level
 import ru.otus.otuskotlin.sokolova.finances.api.v1
-import ru.otus.otuskotlin.sokolova.finances.backend.services.AccountService
-import ru.otus.otuskotlin.sokolova.finances.backend.services.OperationService
+import ru.otus.otuskotlin.sokolova.finances.backend.services.FinsService
 
 // function with config (application.conf)
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -61,15 +60,14 @@ fun Application.module() {
 
     install(Locations)
 
-    val accountService = AccountService()
-    val operationService = OperationService()
+    val finsService = FinsService()
 
     routing {
         get("/") {
             call.respondText("Hello, world!")
         }
 
-        v1(accountService, operationService)
+        v1(finsService)
 
         static("static") {
             resources("static")

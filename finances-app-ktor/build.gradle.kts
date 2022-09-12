@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.util.suffixIfNot
 val ktorVersion: String by project
 
 // ex: Converts to "io.ktor:ktor-ktor-server-netty:2.0.1" with only ktor("netty")
-fun DependencyHandler.ktor(module: String, prefix: String = "server-", version: String? = ktorVersion): Any =
+fun ktor(module: String, prefix: String = "server-", version: String? = ktorVersion): Any =
     "io.ktor:ktor-${prefix.suffixIfNot("-")}$module:$version"
 
 plugins {

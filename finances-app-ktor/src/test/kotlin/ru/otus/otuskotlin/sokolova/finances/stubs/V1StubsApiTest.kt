@@ -41,9 +41,9 @@ class V1StubsApiTest {
 
         val response = client.post("/v1/account/create") {
             val requestObj = AccountCreateRequest(
-                requestId = "12345",
+                requestId = "e022eca4-84b2-401a-b15b-0a0efa1f7f43",
                 account = AccountData(
-                    userId = "1",
+                    userId = "bf2a5cb6-7811-4269-8620-a7facc145229",
                     name = "Тинёк-осн",
                     description = "основной счет в Тинькофф",
                     amount = "0.0"
@@ -58,7 +58,7 @@ class V1StubsApiTest {
         }
         val responseObj = response.body<AccountCreateResponse>()
         assertEquals(200, response.status.value)
-        assertEquals("123", responseObj.account?.accountId)
+        assertEquals("bf2a5cb6-7811-4269-8620-a7facc145229", responseObj.account?.userId)
     }
 
     @Test
@@ -107,6 +107,7 @@ class V1StubsApiTest {
         val responseObj = response.body<AccountUpdateResponse>()
         assertEquals(200, response.status.value)
         assertEquals("123", responseObj.account?.accountId)
+        assertEquals(null, responseObj.errors)
     }
 
     @Test

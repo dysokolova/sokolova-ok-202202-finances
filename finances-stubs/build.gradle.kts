@@ -8,9 +8,12 @@ kotlin {
     linuxX64 {}
 
     sourceSets {
+        val uuidVersion: String by project
+
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                implementation("com.benasher44:uuid:$uuidVersion")
 
                 implementation(project(":finances-common"))
             }

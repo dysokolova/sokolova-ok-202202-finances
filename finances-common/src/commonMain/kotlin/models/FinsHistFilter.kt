@@ -5,4 +5,10 @@ import ru.otus.otuskotlin.sokolova.finances.common.NONE
 data class FinsHistFilter(
     var fromDateTime: Instant = Instant.NONE,
     var toDateTime: Instant = Instant.NONE,
-)
+){
+    fun deepCopy(
+    ) = FinsHistFilter(
+        fromDateTime = this@FinsHistFilter.fromDateTime,
+        toDateTime = this@FinsHistFilter.toDateTime
+    )
+}
