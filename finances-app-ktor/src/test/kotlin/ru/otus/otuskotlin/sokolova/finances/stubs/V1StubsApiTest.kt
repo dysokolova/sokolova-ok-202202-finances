@@ -42,8 +42,8 @@ class V1StubsApiTest {
         val response = client.post("/v1/account/create") {
             val requestObj = AccountCreateRequest(
                 requestId = "e022eca4-84b2-401a-b15b-0a0efa1f7f43",
+                userId = "bf2a5cb6-7811-4269-8620-a7facc145229",
                 account = AccountData(
-                    userId = "bf2a5cb6-7811-4269-8620-a7facc145229",
                     name = "Тинёк-осн",
                     description = "основной счет в Тинькофф",
                     amount = "0.0"
@@ -58,7 +58,7 @@ class V1StubsApiTest {
         }
         val responseObj = response.body<AccountCreateResponse>()
         assertEquals(200, response.status.value)
-        assertEquals("bf2a5cb6-7811-4269-8620-a7facc145229", responseObj.account?.userId)
+        assertEquals("bf2a5cb6-7811-4269-8620-a7facc145229", responseObj.userId)
     }
 
     @Test
@@ -88,9 +88,9 @@ class V1StubsApiTest {
 
         val response = client.post("/v1/account/update") {
             val requestObj = AccountUpdateRequest(
-                requestId = "12345",
+                requestId = "e022eca4-84b2-401a-b15b-0a0efa1f7f43",
+                userId = "bf2a5cb6-7811-4269-8620-a7facc145229",
                 account = Account(
-                    userId = "1",
                     name = "Тинёк-осн",
                     description = "основной счет в Тинькофф",
                     amount = "0.0",
@@ -106,8 +106,7 @@ class V1StubsApiTest {
         }
         val responseObj = response.body<AccountUpdateResponse>()
         assertEquals(200, response.status.value)
-        assertEquals("123", responseObj.account?.accountId)
-        assertEquals(null, responseObj.errors)
+        assertEquals("0.0", responseObj.account?.amount)
     }
 
     @Test
@@ -136,7 +135,8 @@ class V1StubsApiTest {
 
         val response = client.post("/v1/account/search") {
             val requestObj = AccountSearchRequest(
-                requestId = "12345",
+                requestId = "e022eca4-84b2-401a-b15b-0a0efa1f7f43",
+                userId = "bf2a5cb6-7811-4269-8620-a7facc145229",
                 searchFilter = SearchFilterObj("123"),
                 debug = Debug(
                     mode = RequestDebugMode.STUB,
@@ -148,7 +148,7 @@ class V1StubsApiTest {
         }
         val responseObj = response.body<AccountSearchResponse>()
         assertEquals(200, response.status.value)
-        assertEquals("123", responseObj.accounts?.first()?.account?.accountId)
+        assertEquals("desc 123", responseObj.accounts?.first()?.account?.description?.substring(0,8))
     }
 
     @Test
@@ -158,7 +158,7 @@ class V1StubsApiTest {
         val response = client.post("/v1/account/history") {
             val requestObj = AccountHistoryRequest(
                 requestId = "12345",
-                account = AccountId("123"),
+                account = AccountId("9224ec32-23ad-486d-a0c4-c20e2424d36e"),
                 debug = Debug(
                     mode = RequestDebugMode.STUB,
                     stub = RequestDebugStubs.SUCCESS
@@ -169,7 +169,7 @@ class V1StubsApiTest {
         }
         val responseObj = response.body<AccountHistoryResponse>()
         assertEquals(200, response.status.value)
-        assertEquals("111", responseObj.operations?.first()?.operation?.operationId)
+        assertEquals("9224ec32-23ad-486d-a0c4-c20e2424d36e", responseObj.operations?.first()?.operation?.fromAccountId)
     }
 
     fun `operation create`() = testApplication {
@@ -184,9 +184,9 @@ class V1StubsApiTest {
 
         val response = client.post("/v1/operation/create") {
             val requestObj = OperationCreateRequest(
+                userId = "1",
                 requestId = "12345",
                 operation = OperationData(
-                    userId = "1",
                     description = "перевод",
                     amount = "10.0",
                     fromAccountId = "1",
@@ -234,8 +234,8 @@ class V1StubsApiTest {
         val response = client.post("/v1/operation/update") {
             val requestObj = OperationUpdateRequest(
                 requestId = "12345",
+                userId = "1",
                 operation = Operation(
-                    userId = "1",
                     description = "перевод",
                     amount = "10.0",
                     fromAccountId = "1",

@@ -1,7 +1,5 @@
 package ru.otus.otuskotlin.sokolova.finances
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
@@ -17,8 +15,11 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.slf4j.event.Level
+import ru.otus.otuskotlin.sokolova.finances.api.config.jsonConfig
 import ru.otus.otuskotlin.sokolova.finances.api.v1
+import ru.otus.otuskotlin.sokolova.finances.api.v1.finsWsHandlerV1
 import ru.otus.otuskotlin.sokolova.finances.backend.services.FinsService
+import ru.otus.otuskotlin.sokolova.finances.common.KtorUserSession
 
 // function with config (application.conf)
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -46,10 +47,7 @@ fun Application.module() {
 
     install(ContentNegotiation) {
         jackson {
-            disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-
-            enable(SerializationFeature.INDENT_OUTPUT)
-            writerWithDefaultPrettyPrinter()
+            jsonConfig()
         }
     }
 
@@ -61,6 +59,7 @@ fun Application.module() {
     install(Locations)
 
     val finsService = FinsService()
+    val sessions = mutableSetOf<KtorUserSession>()
 
     routing {
         get("/") {
@@ -71,6 +70,9 @@ fun Application.module() {
 
         static("static") {
             resources("static")
+        }
+        webSocket("/ws/v1") {
+            finsWsHandlerV1(finsService, sessions)
         }
     }
 }

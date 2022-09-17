@@ -13,7 +13,7 @@ fun ICorChainDsl<FinsContext>.stubAccountSearchSuccess(title: String) = worker {
     handle {
         state = FinsState.FINISHING
         val stubSrchFilter = FinsObjectsStub.prepareSrchFilter {
-            searchFilter.takeIf { it != "" }?.also { this.searchFilter = it }
+            accountFilterRequest.searchFilter.takeIf { it != "" }?.also { this.searchFilter = it }
         }
          accountsResponse.addAll(FinsObjectsStub.prepareSearchList(stubSrchFilter.searchFilter))
     }

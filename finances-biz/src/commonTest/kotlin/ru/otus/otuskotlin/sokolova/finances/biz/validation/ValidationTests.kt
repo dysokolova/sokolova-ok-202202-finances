@@ -254,13 +254,13 @@ fun validationSearchFilterTest(command: FinsCommand, processor: FinsProcessor) =
         workMode = FinsWorkMode.TEST,
         userId = FinsUserId("985f67fc-cefd-4dd4-9706-803983b39858"),
         accountFilterRequest = FinsSrchFilter(
-            searchFilter = "<строка поиска>"
+            searchFilter = "<1строка поиска>"
         )
     )
     processor.exec(ctx)
     assertEquals(0, ctx.errors.size)
     assertNotEquals(FinsState.FAILING, ctx.state)
-    assertEquals("<строка поиска>", ctx.accountFilterValidated.searchFilter)
+    assertEquals("<1строка поиска>", ctx.accountFilterValidated.searchFilter)
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)

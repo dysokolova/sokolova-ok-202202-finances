@@ -53,6 +53,11 @@
 1. [specs](specs) - описание API в форме OpenAPI-спецификаций
 2. [finances-transport-main-openapi](finances-transport-main-openapi) - Генерация первой версии транспортных моделей с
    Jackson
-3. [finances-common](finances-common) - модуль с общими классами для модулей проекта. В частности,
+3. [finances-common](finances-common) - Модуль с общими классами для модулей проекта. В частности,
    там располагаются внутренние модели и контекст.
 4. [finances-mappers](finances-mappers) - Мапер между внутренними моделями и моделями API
+5. [finances-services](finances-services) - Сервис. Служит оберткой для модуля бизнес-логики. Подключается всеми фреймворками (модулями *-app-*)
+6. [finances-app-ktor](finances-app-ktor) - Приложение на Ktor JVM для запуска API (Rest, Websocket)
+7. [finances-stubs](finances-stubs) - Стабы для ответов сервиса
+8. [finances-biz](finances-biz) - Модуль бизнес-логики приложения
+9. [finances-app-rabbit](finances-app-rabbit) - Микросервис на RabbitMQ
