@@ -13,12 +13,12 @@ class MapperTest {
         val req = AccountCreateRequest(
             requestId = "3395ac64-3cf3-478a-afc9-16fb64b88281",
             requestType = "accountCreate",
+            userId = "1",
             debug = Debug(
                 mode = RequestDebugMode.STUB,
                 stub = RequestDebugStubs.SUCCESS,
             ),
             account = AccountData(
-                userId = "1",
                 name = "Тинёк-осн",
                 description = "основной счет в Тинькофф",
                 amount = "10.0"
@@ -30,7 +30,7 @@ class MapperTest {
 
         assertEquals(FinsStubs.SUCCESS, context.stubCase)
         assertEquals(FinsWorkMode.STUB, context.workMode)
-        assertEquals("1",  context.accountRequest.userId.asString())
+        assertEquals("1",  context.userId.asString())
         assertEquals("Тинёк-осн", context.accountRequest.name)
         assertEquals(10.0, context.accountRequest.amount)
         assertEquals("основной счет в Тинькофф", context.accountRequest.description)
@@ -41,8 +41,8 @@ class MapperTest {
         val context = FinsContext(
             requestId = FinsRequestId("1234"),
             command = FinsCommand.ACCOUNTCREATE,
+            userId = FinsUserId("1"),
             accountResponse = FinsAccount(
-                userId = FinsUserId("1"),
                 name = "Тинёк-осн",
                 description = "основной счет в Тинькофф",
                 amount = 120.0,

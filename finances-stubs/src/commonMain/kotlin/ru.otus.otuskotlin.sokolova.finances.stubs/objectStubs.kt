@@ -2,12 +2,10 @@ package ru.otus.otuskotlin.sokolova.finances.stubs
 
 import kotlinx.datetime.Clock
 import ru.otus.otuskotlin.sokolova.finances.common.models.*
-import kotlinx.datetime.Instant
 
 
 object AccountStub {
     private fun stub1() = FinsAccount(
-        userId = FinsUserId("1"),
         name = "Тинёк-осн",
         description = "основной счет в Тинькофф",
         amount = 120.0,
@@ -15,7 +13,6 @@ object AccountStub {
     )
 
     private fun stub2() = FinsAccount(
-        userId = FinsUserId("1"),
         name = "Тинёк-нз",
         description = "накопительный счет в Тинькофф",
         amount = 1000.0,
@@ -32,7 +29,6 @@ object AccountStub {
     )
 
     fun FinsAccount.update(account: FinsAccount) = apply {
-        userId = account.userId
         name = account.name
         description = account.description
         amount = account.amount
@@ -44,7 +40,6 @@ object AccountStub {
 
 object OperationStub {
     private fun stub1() = FinsOperation(
-        userId = FinsUserId("1"),
         description = "перевод",
         amount = 10.0,
         fromAccountId = FinsAccountId("1"),
@@ -54,7 +49,6 @@ object OperationStub {
     )
 
     private fun stub2() = FinsOperation(
-        userId = FinsUserId("1"),
         description = "перевод",
         amount = 20.0,
         fromAccountId = FinsAccountId("1"),
@@ -73,7 +67,6 @@ object OperationStub {
     )
 
     fun FinsOperation.update(operation: FinsOperation) = apply {
-        userId = operation.userId
         description = operation.description
         amount = operation.amount
         fromAccountId = operation.fromAccountId

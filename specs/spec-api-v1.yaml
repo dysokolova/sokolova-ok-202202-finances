@@ -244,20 +244,33 @@ components:
       description: Перечисления всех стабов
       enum:
         - success
-        - notFound
-        - badUserId
-        - badName
-        - badDescription
-        - badAccountId
-        - badAmount
-        - badFromAccountId
-        - badToAccountId
-        - badOperationDateTime
-        - badOperationId
+        - badFormatUserId
+        - emptyUserId
+        - notFoundUserId
+        - emptyName
+        - badFormatAmount
+        - emptyAmount
+        - badFormatAccountId
+        - emptyAccountId
+        - notFoundAccountId
+        - emptySearchFilter
+        - badFormatFromDateTime
+        - emptyFromDateTime
+        - badFormatToDateTime
+        - emptyToDateTime
+        - badFormatFromAccountId
+        - emptyFromAccountId
+        - notFoundFromAccountId
+        - badFormatToAccountId
+        - emptyToAccountId
+        - notFoundToAccountId
+        - badFormatOperationDateTime
+        - emptyOperationDateTime
+        - badFormatOperationId
+        - emptyOperationId
+        - notFoundOperationId
+        - dbError
         - cannotDelete
-        - badSearchFilter
-        - badFromDateTime
-        - badToDateTime
 
 
     ResponseResult:
@@ -310,6 +323,9 @@ components:
           type: string
           description: Поле-дескриминатор для вычисления типа запроса
           example: accountCreate
+        UserId:
+          type: string
+          description: Идентификатор пользователя
       discriminator:
         propertyName: requestType
         mapping:
@@ -335,6 +351,9 @@ components:
         requestId:
           type: string
           description: Идентификатор запроса для отладки
+        UserId:
+          type: string
+          description: Идентификатор пользователя
         result:
           $ref: '#/components/schemas/ResponseResult'
         errors:
@@ -359,9 +378,6 @@ components:
       type: object
       description:  Данные счёта
       properties:
-        UserId:
-          type: string
-          description: Идентификатор пользователя
         Name:
           type: string
           description: Название счёта
@@ -378,7 +394,6 @@ components:
       properties:
         account:
           $ref: '#/components/schemas/AccountData'
-
 
     AccountId:
       type: object
@@ -413,9 +428,6 @@ components:
       type: object
       description:  Данные операции
       properties:
-        UserId:
-          type: string
-          description: Идентификатор пользователя
         Description:
           type: string
           description: Описание операции

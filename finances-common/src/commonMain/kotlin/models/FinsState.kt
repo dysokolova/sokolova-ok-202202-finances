@@ -4,4 +4,5 @@ enum class FinsState {
     NONE,
     RUNNING,
     FAILING,
+    FINISHING
 }

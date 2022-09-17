@@ -13,6 +13,7 @@ pluginManagement {
         kotlin("plugin.serialization") version kotlinVersion apply false
 
         id("com.bmuschko.docker-java-application") version bmuschkoVersion apply false
+        id("com.bmuschko.docker-remote-api") version bmuschkoVersion apply false
         id("org.openapi.generator") version openapiVersion apply false
     }
 }
@@ -23,3 +24,4 @@ include("finances-mappers")
 include("finances-stubs")
 include("finances-services")
 include("finances-app-ktor")
+include("finances-biz")

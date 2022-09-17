@@ -3,17 +3,36 @@ POST http://localhost:8080/v1/account/create
 Content-Type: application/json
 
 {
-  "requestId": "string",
+  "requestId": "4ea0d091-9fec-4fa8-986a-a1c890e11efb",
+  "UserId": "e2df239d-a946-46a4-b967-5f19f02b37ae",
   "requestType": "accountCreate",
   "debug": {
     "mode": "stub",
     "stub": "success"
   },
   "account": {
-    "UserId": "string",
-    "Name": "string",
-    "Description": "string",
-    "Amount": "100.0"
+    "Name": "Name",
+    "Description": "Description",
+    "Amount": "100с яБ<"
+  }
+}
+
+### Send POST request account/update
+POST http://localhost:8080/v1/account/create
+Content-Type: application/json
+
+{
+  "requestId": "a6212572-3ea3-47ab-8702-83f052d23100",
+  "UserId": "e26f14a8-1d01-4699-a36a-e2666b54a757",
+  "requestType": "accountCreate",
+  "debug": {
+    "mode": "stub",
+    "stub": "badFormatAmount"
+  },
+  "account": {
+    "Name": "Name",
+    "Description": "Description",
+    "Amount": "11.0"
   }
 }
 
@@ -22,19 +41,19 @@ POST http://localhost:8080/v1/account/update
 Content-Type: application/json
 
 {
-"requestId": "string",
-"requestType": "accountUpdate",
-"debug": {
-  "mode": "test",
-  "stub": "success"
-},
-"account": {
-"UserId": "123",
-"Name": "string",
-"Description": "string",
-"Amount": "100.0",
-"AccountId": "1"
-}
+  "requestId": "fd6a06ac-f280-4c52-84a7-f593d7464cc1",
+  "UserId": "a6631c65-862f-481d-867c-319958e532ed",
+  "requestType": "accountUpdate",
+  "debug": {
+    "mode": "stub",
+    "stub": "success"
+  },
+  "account": {
+    "Name": "Name",
+    "Description": "Description",
+    "Amount": "100.0",
+    "AccountId": "5aa680cf-ef8a-465a-aad6-73580574336f"
+  }
 }
 
 ### Send POST request account/search
@@ -42,15 +61,16 @@ POST http://localhost:8080/v1/account/search
 Content-Type: application/json
 
 {
-"requestId": "string",
-"requestType": "accountSearch",
-"debug": {
-"mode": "stub",
-"stub": "success"
-},
-"searchFilter": {
-"SearchFilter": "string"
-}
+  "requestId": "6998f7ef-8158-41e4-acc5-d1d8c1801a34",
+  "UserId": "10acd1df-4422-405b-bcba-d31f7a4b96f3",
+  "requestType": "accountSearch",
+  "debug": {
+    "mode": "stub",
+    "stub": "success"
+  },
+  "searchFilter": {
+    "SearchFilter": "SearchFilter"
+  }
 }
 
 ### Send POST request account/history
@@ -58,17 +78,18 @@ POST http://localhost:8080/v1/account/history
 Content-Type: application/json
 
 {
-  "requestId": "string",
+  "requestId": "b1df36b7-817e-4ab9-ad15-c0d65cd21338",
+  "UserId": "64be9b0a-6964-4352-8a9d-c8eeab288bd2",
   "requestType": "accountHistory",
   "debug": {
     "mode": "stub",
     "stub": "success"
   },
   "account": {
-    "AccountId": "string"
+    "AccountId": "18504110-f3f4-494f-a27f-04984da0245e"
   },
   "historyFilter": {
-    "fromDateTime": "2010-06-01T22:19:44.475Z",
-    "toDateTime": "2010-06-01T22:19:44.475Z"
+    "fromDateTime": "2>vcf010-06-01T22:19:44.475Z",
+    "toDateTime": "20vcf10-06-01T23:19:44.475Z"
   }
 }
