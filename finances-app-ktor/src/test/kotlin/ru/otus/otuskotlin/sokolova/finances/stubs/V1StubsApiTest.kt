@@ -116,7 +116,7 @@ class V1StubsApiTest {
         val response = client.post("/v1/account/delete") {
             val requestObj = AccountDeleteRequest(
                 requestId = "12345",
-                account = AccountId("123"),
+                account = AccountDelId("123"),
                 debug = Debug(
                     mode = RequestDebugMode.STUB,
                     stub = RequestDebugStubs.SUCCESS
@@ -263,7 +263,7 @@ class V1StubsApiTest {
         val response = client.post("/v1/operation/delete") {
             val requestObj = OperationDeleteRequest(
                 requestId = "12345",
-                operation = OperationId("123"),
+                operation = OperationDelId("123"),
                 debug = Debug(
                     mode = RequestDebugMode.STUB,
                     stub = RequestDebugStubs.SUCCESS

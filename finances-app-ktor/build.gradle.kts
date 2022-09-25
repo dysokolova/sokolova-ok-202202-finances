@@ -13,7 +13,8 @@ plugins {
 }
 
 application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
+//    mainClass.set("io.ktor.server.netty.EngineMain")
+    mainClass.set("ru.otus.otuskotlin.sokolova.finances.ApplicationKt")
 }
 
 docker {
@@ -69,6 +70,10 @@ dependencies {
 
     // Stubs
     implementation(project(":finances-stubs"))
+
+    // Repositories
+    implementation(project(":finances-repo-inmemory"))
+    implementation(project(":finances-storage-postgresql"))
 
     testImplementation(kotlin("test-junit"))
     testImplementation(ktor("test-host")) // "io.ktor:ktor-server-test-host:$ktorVersion"

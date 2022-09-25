@@ -5,7 +5,6 @@ import com.crowdproj.kotlin.cor.handlers.worker
 import kotlinx.datetime.Instant
 import ru.otus.otuskotlin.sokolova.finances.common.FinsContext
 import ru.otus.otuskotlin.sokolova.finances.common.NONE
-import ru.otus.otuskotlin.sokolova.finances.common.helpers.addError
 import ru.otus.otuskotlin.sokolova.finances.common.helpers.fail
 import ru.otus.otuskotlin.sokolova.finances.common.models.FinsAccountId
 import ru.otus.otuskotlin.sokolova.finances.common.models.FinsOperationId

@@ -19,17 +19,17 @@ suspend inline fun <reified Q : IRequest, reified R : IResponse>
         timeStart = Clock.System.now(),
     )
     try {
-        val request = receive<Q>()
+        val request = apiV1RequestDeserialize<Q>(receiveText())
         ctx.fromTransport(request)
         ctx.block()
-        val response = ctx.toTransport()
+        val response = apiV1ResponseSerialize(ctx.toTransport())
         respond(response)
     } catch (e: Throwable) {
         command?.also { ctx.command = it }
         ctx.state = FinsState.FAILING
         ctx.errors.add(e.asFinsError())
         ctx.block()
-        val response = ctx.toTransport()
+        val response = apiV1ResponseSerialize(ctx.toTransport())
         respond(response)
     }
 }

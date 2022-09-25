@@ -3,22 +3,24 @@ package ru.otus.otuskotlin.sokolova.finances.biz
 import com.crowdproj.kotlin.cor.*
 import com.crowdproj.kotlin.cor.handlers.chain
 import com.crowdproj.kotlin.cor.handlers.worker
+import ru.otus.otuskotlin.sokolova.finances.biz.general.initRepo
 import ru.otus.otuskotlin.sokolova.finances.biz.stubs.stubAccountHistorySuccess
 import ru.otus.otuskotlin.sokolova.finances.biz.general.procedure
 import ru.otus.otuskotlin.sokolova.finances.biz.stubs.*
 import ru.otus.otuskotlin.sokolova.finances.biz.validation.*
 import ru.otus.otuskotlin.sokolova.finances.biz.general.initStatus
+import ru.otus.otuskotlin.sokolova.finances.biz.general.prepareResult
+import ru.otus.otuskotlin.sokolova.finances.biz.repo.*
 import ru.otus.otuskotlin.sokolova.finances.common.FinsContext
-import ru.otus.otuskotlin.sokolova.finances.common.models.FinsAccountId
-import ru.otus.otuskotlin.sokolova.finances.common.models.FinsCommand
-import ru.otus.otuskotlin.sokolova.finances.common.models.FinsOperationId
+import ru.otus.otuskotlin.sokolova.finances.common.models.*
 
-class FinsProcessor() {
-    suspend fun exec(ctx: FinsContext) = BuzinessChain.exec(ctx)
+class FinsProcessor(private val settings: FinsSettings = FinsSettings()) {
+    suspend fun exec(ctx: FinsContext) = BuzinessChain.exec(ctx.apply { settings = this@FinsProcessor.settings })
 
     companion object {
         private val BuzinessChain = rootChain<FinsContext> {
             initStatus("Инициализация статуса")
+            initRepo("Инициализация репозитория")
 
             procedure("Создание счёта", FinsCommand.ACCOUNTCREATE) {
                 stubs("Обработка стабов") {
@@ -50,6 +52,13 @@ class FinsProcessor() {
 
                     finishAccountValidation("Успешное завершение процедуры валидации")
                 }
+
+                chain {
+                    title = "Логика сохранения"
+                    repoAccountCreatePrepare("Подготовка объекта для сохранения")
+                    repoAccountCreate("Создание счёта в БД")
+                }
+                prepareResult("Подготовка ответа")
             }
             procedure("Получить информацию о счете", FinsCommand.ACCOUNTREAD) {
                 stubs("Обработка стабов") {
@@ -78,6 +87,17 @@ class FinsProcessor() {
 
                     finishAccountValidation("Успешное завершение процедуры валидации")
                 }
+
+                chain {
+                    title = "Логика для чтения данных по счёту"
+                    repoAccountRead("Чтение счёта из БД")
+                    worker {
+                        title = "Подготовка ответа для Read"
+                        on { state == FinsState.RUNNING }
+                        handle { accountRepoDone = accountRepoRead }
+                    }
+                }
+                prepareResult("Подготовка ответа")
             }
             procedure("Изменить счёт", FinsCommand.ACCOUNTUPDATE) {
                 stubs("Обработка стабов") {
@@ -96,6 +116,7 @@ class FinsProcessor() {
                     stubValidationEmptyAccountId("Имитация ошибки валидации счёта - пустое значение")
                     stubNotFoundAccountId("Имитация ошибки notFound для счёта ")
 
+                    stubErrorAccountConcurentOnChange("Имитация ошибки блокировки для изменения счёта ")
                     stubDbError("Имитация ошибки работы с БД")
                     stubNoCase("Ошибка: запрошенный стаб недопустим")
                 }
@@ -117,6 +138,15 @@ class FinsProcessor() {
 
                     finishAccountValidation("Успешное завершение процедуры валидации")
                 }
+
+                chain {
+                    title = "Логика изменения"
+                    repoAccountRead("Чтение счёта из БД")
+                    repoAccountCheckReadLock("Проверяем блокировку")
+                    repoAccountUpdatePrepare("Подготовка объекта для обновления")
+                    repoAccountUpdate("Обновление счёта в БД")
+                }
+                prepareResult("Подготовка ответа")
             }
             procedure("Удалить счёт", FinsCommand.ACCOUNTDELETE) {
                 stubs("Обработка стабов") {
@@ -130,6 +160,7 @@ class FinsProcessor() {
                     stubValidationEmptyAccountId("Имитация ошибки валидации счёта - пустое значение")
                     stubNotFoundAccountId("Имитация ошибки notFound для счёта ")
 
+                    stubErrorAccountConcurentOnDelete("Имитация ошибки блокировки для удаления счёта ")
                     stubCannotDelete("Ошибка: невозможно удалить")
 
                     stubDbError("Имитация ошибки работы с БД")
@@ -147,6 +178,15 @@ class FinsProcessor() {
 
                     finishAccountValidation("Успешное завершение процедуры валидации")
                 }
+
+                chain {
+                    title = "Логика удаления данных счёта"
+                    repoAccountRead("Чтение счёта из БД")
+                    repoAccountCheckReadLock("Проверяем блокировку")
+                    repoAccountDeletePrepare("Подготовка объекта для удаления")
+                    repoAccountDelete("Удаление счёта из БД")
+                }
+                prepareResult("Подготовка ответа")
             }
             procedure("Поиск счетов", FinsCommand.ACCOUNTSEARCH) {
                 stubs("Обработка стабов") {
@@ -171,6 +211,9 @@ class FinsProcessor() {
 
                     finishAccountFilterValidation("Успешное завершение процедуры валидации")
                 }
+
+                repoAccountSearch("Поиск счетов в БД по фильтру")
+                prepareResult("Подготовка ответа")
             }
             procedure("История операций по счету", FinsCommand.ACCOUNTHISTORY) {
                 stubs("Обработка стабов") {
@@ -210,6 +253,12 @@ class FinsProcessor() {
                     validationNotEmptyToDateTime("Проверка на непустую  дату \"по\"")
 
                     finishAccountHistoryValidation("Успешное завершение процедуры валидации")
+                }
+
+                chain {
+                    title = "Поиск в БД операций по счёту за период"
+                    repoAccountHistoryPrepare("Подготовка объекта для обращения в БД")
+                    repoAccountHistory("Запрос истории")
                 }
             }
             procedure("Создание операции", FinsCommand.OPERATIONCREATE) {
@@ -260,6 +309,13 @@ class FinsProcessor() {
 
                     finishOperationValidation("Успешное завершение процедуры валидации")
                 }
+
+                chain {
+                    title = "Логика сохранения"
+                    repoOperationCreatePrepare("Подготовка объекта для сохранения")
+                    repoOperationCreate("Создание операции в БД")
+                }
+                prepareResult("Подготовка ответа")
             }
             procedure("Получить информацию об операции", FinsCommand.OPERATIONREAD) {
                 stubs("Обработка стабов") {
@@ -289,6 +345,17 @@ class FinsProcessor() {
 
                     finishOperationValidation("Успешное завершение процедуры валидации")
                 }
+
+                chain {
+                    title = "Логика для чтения данных по операции"
+                    repoOperationRead("Чтение объявления из БД")
+                    worker {
+                        title = "Подготовка ответа для Read"
+                        on { state == FinsState.RUNNING }
+                        handle { operationRepoDone = operationRepoRead }
+                    }
+                }
+                prepareResult("Подготовка ответа")
             }
             procedure("Изменить операцию", FinsCommand.OPERATIONUPDATE) {
                 stubs("Обработка стабов") {
@@ -315,6 +382,8 @@ class FinsProcessor() {
                     stubValidationBadFormatOperationId("Имитация ошибки валидации операции - неверный формат")
                     stubValidationEmptyOperationId("Имитация ошибки валидации операции - пустое значение")
                     stubNotFoundOperationId("Имитация ошибки notFound для операции ")
+
+                    stubErrorOperationConcurentOnChange("Имитация ошибки блокировки для изменения операции ")
 
                     stubDbError("Имитация ошибки работы с БД")
                     stubNoCase("Ошибка: запрошенный стаб недопустим")
@@ -343,6 +412,14 @@ class FinsProcessor() {
 
                     finishOperationValidation("Успешное завершение процедуры валидации")
                 }
+                chain {
+                    title = "Логика изменения"
+                    repoOperationRead("Чтение операции из БД")
+                    repoOperationCheckReadLock("Проверяем блокировку")
+                    repoOperationUpdatePrepare("Подготовка объекта для обновления")
+                    repoOperationUpdate("Обновление операции в БД")
+                }
+                prepareResult("Подготовка ответа")
             }
             procedure("Удалить операцию", FinsCommand.OPERATIONDELETE) {
                 stubs("Обработка стабов") {
@@ -356,6 +433,7 @@ class FinsProcessor() {
                     stubValidationEmptyOperationId("Имитация ошибки валидации операции - пустое значение")
                     stubNotFoundOperationId("Имитация ошибки notFound для операции ")
 
+                    stubErrorOperationConcurentOnDelete("Имитация ошибки блокировки для удаления операции ")
                     stubCannotDelete("Ошибка: невозможно удалить")
 
                     stubDbError("Имитация ошибки работы с БД")
@@ -374,6 +452,14 @@ class FinsProcessor() {
 
                     finishOperationValidation("Успешное завершение процедуры валидации")
                 }
+                chain {
+                    title = "Логика удаления данных операции"
+                    repoOperationRead("Чтение операции из БД")
+                    repoOperationCheckReadLock("Проверяем блокировку")
+                    repoOperationDeletePrepare("Подготовка объекта для удаления")
+                    repoOperationDelete("Удаление операции из БД")
+                }
+                prepareResult("Подготовка ответа")
             }
 
         }.build()

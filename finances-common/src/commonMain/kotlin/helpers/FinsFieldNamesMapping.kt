@@ -18,5 +18,7 @@ fun fieldName(
     "toAccountId" -> "ToAccountId"
     "operationDateTime" -> "OperationDateTime"
     "operationId" -> "OperationId"
+    "accountLock" -> "AccountLock"
+    "operationLock" -> "OperationLock"
     else -> inModelName
 }

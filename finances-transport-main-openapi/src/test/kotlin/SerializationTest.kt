@@ -16,7 +16,6 @@ class SerializationTest {
                 stub = RequestDebugStubs.SUCCESS,
             ),
             account = AccountData(
-                userId = "1",
                 name = "Тинёк-осн",
                 description = "основной счет в Тинькофф",
                 amount = "0.0"

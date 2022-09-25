@@ -26,6 +26,8 @@ dependencies {
     // Stubs
     implementation(project(":finances-stubs"))
 
+    // Repo
+    implementation(project(":finances-repo-inmemory"))
 
     testImplementation("org.testcontainers:rabbitmq:$testContainersVersion")
     testImplementation(kotlin("test"))

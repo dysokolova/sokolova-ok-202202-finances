@@ -19,7 +19,7 @@ return FinsError(
     code = "validation-$field-$violationCode",
     field = field,
     group = "validation",
-    message = "Validation error for field \"$field\": $description",
+    message = "Validation error for field \"$field\": Object has changed during request handling",
     level = level,
 )
 }

@@ -7,4 +7,8 @@ data class FinsSrchFilter(
     ) = FinsSrchFilter(
         searchFilter = this@FinsSrchFilter.searchFilter
     )
+
+    companion object {
+        val NONE = FinsSrchFilter("")
+    }
 }
