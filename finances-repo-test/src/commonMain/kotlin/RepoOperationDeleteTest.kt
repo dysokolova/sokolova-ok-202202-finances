@@ -26,16 +26,14 @@ abstract class RepoOperationDeleteTest {
 
         assertEquals(false, result.isSuccess)
         assertEquals(null, result.result)
-        assertEquals(
-            listOf(FinsError(field = "id", message = "Not Found")),
-            result.errors
-        )
+        assertEquals("OperationId", result.errors.first().field)
+        assertEquals("notFound", result.errors.first().group)
     }
 
     companion object : BaseInitObjects() {
         private val userId = FinsUserId("user-123")
         override val initAccountObjects: List<Pair<FinsUserId, FinsAccount>> = listOf(
-            createInitTestAccountModel("search1", userId), createInitTestAccountModel("search2", userId)
+            createInitTestAccountModel("search1", userId,1), createInitTestAccountModel("search2", userId,2)
         )
 
         private val fromAccountId = initAccountObjects[0].second.accountId

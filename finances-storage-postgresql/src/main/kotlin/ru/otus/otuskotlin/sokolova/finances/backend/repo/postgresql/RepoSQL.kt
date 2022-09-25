@@ -389,22 +389,26 @@ class RepoSQL(
 
     override suspend fun operationRead(rq: DbOperationIdRequest): DbOperationResponse {
         return safeTransaction({
-            val result =
-                (OperationsTable innerJoin UsersTable).select {
-                    OperationsTable.id.eq(rq.operationId.asString()) and OperationsTable.userId.eq(
-                        rq.userId.asString()
-                    )
-                }
-                    .single()
 
-            DbResponse<FinsOperation>(OperationsTable.from(result), true).toDbOperationResponse()
+            if (UsersTable.select {
+                    UsersTable.id.eq(rq.userId.asString())
+                }
+                    .empty()) return@safeTransaction resultError<FinsOperation>(FinsStubs.NOT_FOUND_USER_ID).toDbOperationResponse()
+            val result = OperationsTable.select {
+                OperationsTable.id.eq(rq.operationId.asString()) and OperationsTable.userId.eq(
+                    rq.userId.asString()
+                )
+            }
+            if (result.empty()) return@safeTransaction resultError<FinsOperation>(FinsStubs.NOT_FOUND_OPERATION_ID).toDbOperationResponse()
+
+
+            DbOperationResponse(OperationsTable.from(result.single()), true)
         }, {
             val err = when (this) {
-                is NoSuchElementException -> FinsError(field = "id", message = "Not Found")
                 is IllegalArgumentException -> FinsError(message = "More than one element with the same id")
                 else -> FinsError(message = localizedMessage)
             }
-            DbResponse<FinsOperation>(result = null, isSuccess = false, errors = listOf(err)).toDbOperationResponse()
+            DbOperationResponse(result = null, isSuccess = false, errors = listOf(err))
         })
     }
 
@@ -432,11 +436,11 @@ class RepoSQL(
                     else -> resultError<FinsOperation>(FinsStubs.ERROR_OPERATION_CONCURENT_ON_CHANGE).toDbOperationResponse()
                 }
             }, {
-                DbResponse<FinsOperation>(
+                DbOperationResponse(
                     result = null,
                     isSuccess = false,
-                    errors = listOf(FinsError(field = "id", message = "Not Found"))
-                ).toDbOperationResponse()
+                    listOf(FinsError(message = message ?: localizedMessage))
+                )
             })
         }
     }
@@ -447,20 +451,47 @@ class RepoSQL(
 
         return mutex.withLock {
             safeTransaction({
-                val local = OperationsTable.select { OperationsTable.id.eq(rq.operationId.asString()) }.single()
-                    .let { OperationsTable.from(it) }
+                if (UsersTable.select {
+                        UsersTable.id.eq(rq.userId.asString())
+                    }
+                        .empty()) return@safeTransaction resultError<FinsOperation>(FinsStubs.NOT_FOUND_USER_ID).toDbOperationResponse()
+                val dbLocal = OperationsTable.select {
+                    OperationsTable.id.eq(rq.operationId.asString()) and OperationsTable.userId.eq(
+                        rq.userId.asString()
+                    )
+                }
+                if (dbLocal.empty()) return@safeTransaction resultError<FinsOperation>(FinsStubs.NOT_FOUND_OPERATION_ID).toDbOperationResponse()
+                val local = OperationsTable.from(dbLocal.single())
                 if (local.operationLock == rq.operationLock) {
+                    AccountsTable.update({
+                        AccountsTable.id.eq(dbLocal.single()[fromAccountId]) and AccountsTable.userId.eq(rq.userId.asString())
+                    }) {
+                        it[amount] = AccountsTable.select {
+                            AccountsTable.id.eq(dbLocal.single()[fromAccountId])
+                        }.single()[amount] + dbLocal.single()[OperationsTable.amount]
+                        it[accountLock] = UUID.randomUUID().toString()
+                    }
+                    AccountsTable.update({
+                        AccountsTable.id.eq(dbLocal.single()[toAccountId]) and AccountsTable.userId.eq(
+                            rq.userId.asString()
+                        )
+                    }) {
+                        it[amount] = AccountsTable.select {
+                            AccountsTable.id.eq(dbLocal.single()[toAccountId])
+                        }.single()[amount] - dbLocal.single()[OperationsTable.amount]
+                        it[accountLock] = UUID.randomUUID().toString()
+                    }
                     OperationsTable.deleteWhere { OperationsTable.id eq rq.operationId.asString() }
                     DbResponse<FinsOperation>(result = local, isSuccess = true).toDbOperationResponse()
                 } else {
                     resultError<FinsOperation>(FinsStubs.ERROR_OPERATION_CONCURENT_ON_DELETE).toDbOperationResponse()
                 }
             }, {
-                DbResponse<FinsOperation>(
+                DbOperationResponse(
                     result = null,
                     isSuccess = false,
-                    errors = listOf(FinsError(field = "id", message = "Not Found"))
-                ).toDbOperationResponse()
+                    listOf(FinsError(message = message ?: localizedMessage))
+                )
             })
         }
     }

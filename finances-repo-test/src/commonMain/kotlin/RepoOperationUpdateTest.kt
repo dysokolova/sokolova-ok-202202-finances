@@ -29,10 +29,8 @@ abstract class RepoOperationUpdateTest {
 
         assertEquals(false, result.isSuccess)
         assertEquals(null, result.result)
-        assertEquals(
-            listOf(FinsError(field = "id", message = "Not Found")),
-            result.errors
-        )
+        assertEquals("OperationId", result.errors.first().field)
+        assertEquals("notFound", result.errors.first().group)
     }
 
     companion object : BaseInitObjects() {
