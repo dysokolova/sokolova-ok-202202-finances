@@ -11,6 +11,7 @@ data class FinsContext (
 
     var workMode: FinsWorkMode = FinsWorkMode.PROD,
     var stubCase: FinsStubs = FinsStubs.NONE,
+    var clientSession: IClientSession<*> = IClientSession.NONE,
 
     var requestId: FinsRequestId = FinsRequestId.NONE,
     var timeStart: Instant = Instant.NONE,
