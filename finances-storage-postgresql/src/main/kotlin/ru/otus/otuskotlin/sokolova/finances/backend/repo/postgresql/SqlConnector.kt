@@ -74,14 +74,16 @@ class SqlConnector(
         //   - exec migrations if needed;
         //   - otherwise unsure to create tables
         transaction(connect) {
-            if (System.getenv("finances.sql_drop_db")?.toBoolean() == true) {
-                SchemaUtils.drop(*tables, inBatch = true)
-                SchemaUtils.create(*tables, inBatch = true)
-            } else if (System.getenv("finances.sql_fast_migration").toBoolean()) {
-                // TODO: Place to exec migration: create and ensure tables
-            } else {
-                SchemaUtils.createMissingTablesAndColumns(*tables, inBatch = true)
-            }
+            SchemaUtils.drop(*tables, inBatch = true)
+            SchemaUtils.create(*tables, inBatch = true)
+//            if (System.getenv("sd.fn.sql_drop_db")?.toBoolean() == true) {
+//                SchemaUtils.drop(*tables, inBatch = true)
+//                SchemaUtils.create(*tables, inBatch = true)
+//            } else if (System.getenv("sd.fn.sql_fast_migration").toBoolean()) {
+//                // TODO: Place to exec migration: create and ensure tables
+//            } else {
+//                SchemaUtils.createMissingTablesAndColumns(*tables, inBatch = true)
+//            }
         }
 
         return connect

@@ -7,7 +7,7 @@ Content-Type: application/json
   "UserId": "e2df239d-a946-46a4-b967-5f19f02b37ae",
   "requestType": "accountCreate",
   "debug": {
-    "mode": "test",
+    "mode": "prod",
     "stub": "success"
   },
   "account": {

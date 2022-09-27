@@ -10,19 +10,17 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
-    class BizRepoAccountUpdateTest {
+    class BizRepoAccountSearchTest {
 
-        private val command = FinsCommand.ACCOUNTUPDATE
-        private val uuidOld = "10000000-0000-0000-0000-000000000001"
+        private val command = FinsCommand.ACCOUNTSEARCH
     private val userId = FinsUserId("20000000-0000-0000-0000-000000000000")
         private val initAccount = FinsAccount(
             name = "abc",
             description = "abc",
             amount = 0.0,
             accountId = FinsAccountId("30000000-0000-0000-0000-000000000000"),
-            accountLock = FinsAccountLock(uuidOld),
         )
-        private val repo by lazy { RepoInMemory(initAccountObjects = listOf(Pair(userId,initAccount)))}
+        private val repo by lazy { RepoInMemory(initAccountObjects = listOf(Pair(userId,initAccount))) }
         private val settings by lazy {
             FinsSettings(
                 repoTest = repo
@@ -31,26 +29,22 @@ import kotlin.test.assertEquals
         private val processor by lazy { FinsProcessor(settings) }
 
         @Test
-        fun repoUpdateSuccessTest() = runTest {
-            val accountToUpdate = FinsAccount(
-                name = "abc1",
-                description = "abc1",
-                amount = 10.0,
-                accountId = FinsAccountId("30000000-0000-0000-0000-000000000000"),
-                accountLock = FinsAccountLock(uuidOld),
+        fun repoSearchSuccessTest() = runTest {
+            val filterToSearch = FinsSrchFilter(
+                searchFilter = "b"
             )
             val ctx = FinsContext(
                 command = command,
                 state = FinsState.NONE,
                 userId = userId,
                 workMode = FinsWorkMode.TEST,
-                accountRequest = accountToUpdate,
+                accountFilterRequest = filterToSearch,
             )
             processor.exec(ctx)
             assertEquals(FinsState.FINISHING, ctx.state)
-            assertEquals(accountToUpdate.name, ctx.accountResponse.name)
-            assertEquals(accountToUpdate.description, ctx.accountResponse.description)
-            assertEquals(accountToUpdate.amount, ctx.accountResponse.amount)
-            assertEquals(accountToUpdate.accountId, ctx.accountResponse.accountId)
+            assertEquals(initAccount.name, ctx.accountsResponse.first().name)
+            assertEquals(initAccount.description, ctx.accountsResponse.first().description)
+            assertEquals(initAccount.amount, ctx.accountsResponse.first().amount)
+            assertEquals(initAccount.accountId, ctx.accountsResponse.first().accountId)
         }
     }

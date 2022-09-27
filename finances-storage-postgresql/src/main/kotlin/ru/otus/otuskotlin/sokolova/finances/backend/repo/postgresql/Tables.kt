@@ -70,14 +70,13 @@ object OperationsTable : StringIdTable("Operations", "operationId") {
 }
 
 object UsersTable : StringIdTable("Users", "userId") {
-    override val primaryKey = PrimaryKey(AccountsTable.id)
+    override val primaryKey = PrimaryKey(id)
 }
 
 open class StringIdTable(name: String = "", columnName: String = "id", columnLength: Int = 50) : IdTable<String>(name) {
     override val id: Column<EntityID<String>> =
-        varchar(columnName, columnLength).uniqueIndex().default(generateUuidAsStringFixedSize())
+        varchar(columnName, columnLength).uniqueIndex().default(UUID.randomUUID().toString())
             .entityId()
     override val primaryKey by lazy { super.primaryKey ?: PrimaryKey(id) }
 }
 
-fun generateUuidAsStringFixedSize() = UUID.randomUUID().toString().replace("-", "").substring(0, 9)

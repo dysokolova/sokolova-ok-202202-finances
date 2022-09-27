@@ -73,7 +73,8 @@ fun Application.module(
     val corSettings by lazy {
         settings ?: FinsSettings(
             repoTest = RepoInMemory(),
-            repoProd = RepoSQL(),
+            //     repoProd = RepoSQL(url = "jdbc:postgresql://postgresql:5432/financesdevdb")
+            repoProd = RepoSQL()
         )
     }
 

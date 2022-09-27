@@ -142,7 +142,7 @@ class FinsProcessor(private val settings: FinsSettings = FinsSettings()) {
                 chain {
                     title = "Логика изменения"
                     repoAccountRead("Чтение счёта из БД")
-                    repoAccountCheckReadLock("Проверяем блокировку")
+                    repoAccountCheckReadLockChange("Проверяем блокировку")
                     repoAccountUpdatePrepare("Подготовка объекта для обновления")
                     repoAccountUpdate("Обновление счёта в БД")
                 }
@@ -182,7 +182,7 @@ class FinsProcessor(private val settings: FinsSettings = FinsSettings()) {
                 chain {
                     title = "Логика удаления данных счёта"
                     repoAccountRead("Чтение счёта из БД")
-                    repoAccountCheckReadLock("Проверяем блокировку")
+                    repoAccountCheckReadLockDelete("Проверяем блокировку")
                     repoAccountDeletePrepare("Подготовка объекта для удаления")
                     repoAccountDelete("Удаление счёта из БД")
                 }
@@ -259,6 +259,7 @@ class FinsProcessor(private val settings: FinsSettings = FinsSettings()) {
                     title = "Поиск в БД операций по счёту за период"
                     repoAccountHistoryPrepare("Подготовка объекта для обращения в БД")
                     repoAccountHistory("Запрос истории")
+                    prepareResult("Подготовка ответа")
                 }
             }
             procedure("Создание операции", FinsCommand.OPERATIONCREATE) {
@@ -415,7 +416,7 @@ class FinsProcessor(private val settings: FinsSettings = FinsSettings()) {
                 chain {
                     title = "Логика изменения"
                     repoOperationRead("Чтение операции из БД")
-                    repoOperationCheckReadLock("Проверяем блокировку")
+                    repoOperationCheckReadLockChange("Проверяем блокировку")
                     repoOperationUpdatePrepare("Подготовка объекта для обновления")
                     repoOperationUpdate("Обновление операции в БД")
                 }
@@ -455,7 +456,7 @@ class FinsProcessor(private val settings: FinsSettings = FinsSettings()) {
                 chain {
                     title = "Логика удаления данных операции"
                     repoOperationRead("Чтение операции из БД")
-                    repoOperationCheckReadLock("Проверяем блокировку")
+                    repoOperationCheckReadLockDelete("Проверяем блокировку")
                     repoOperationDeletePrepare("Подготовка объекта для удаления")
                     repoOperationDelete("Удаление операции из БД")
                 }

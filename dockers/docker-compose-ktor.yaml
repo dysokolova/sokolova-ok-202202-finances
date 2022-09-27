@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  app:
+    image: finances-app-ktor:0.0.1
+    ports:
+      - "8080:8080"
+
+  sql:
+    image: postgres:13.2
+    environment:
+      POSTGRES_PASSWORD: finances-pass
+      POSTGRES_USER: postgres
+      POSTGRES_DB: financesdevdb

@@ -4,8 +4,8 @@ plugins {
 
 tasks {
     withType<Test> {
-        environment("finances.sql_drop_db", true)
-        environment("finances.sql_fast_migration", true)
+        environment("sd.fn.sql_drop_db", true)
+        environment("sd.fn.sql_fast_migration", false)
     }
 }
 

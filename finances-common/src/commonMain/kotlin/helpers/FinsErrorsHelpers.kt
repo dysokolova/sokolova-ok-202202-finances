@@ -54,24 +54,6 @@ fun String?.errorConcurrency(
     )
 }
 
-
-
-fun errorConcurrency(
-    /**
-     * Код, характеризующий ошибку. Не должен включать имя поля или указание на валидацию.
-     * Например: empty, badSymbols, tooLong, etc
-     */
-    violationCode: String,
-    description: String,
-    level: FinsErrorLevels = FinsErrorLevels.ERROR,
-) = FinsError(
-    field = "lock",
-    code = "concurrent-$violationCode",
-    group = "concurrency",
-    message = "Concurrent object access error: $description",
-    level = level,
-)
-
 fun errorAdministration(
     /**
      * Код, характеризующий ошибку. Не должен включать имя поля или указание на валидацию.

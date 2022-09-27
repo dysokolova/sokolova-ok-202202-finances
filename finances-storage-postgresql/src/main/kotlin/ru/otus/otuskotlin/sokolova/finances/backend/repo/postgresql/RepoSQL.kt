@@ -3,6 +3,7 @@ package ru.otus.otuskotlin.sokolova.finances.backend.repo.postgresql
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.toInstant
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -51,10 +52,12 @@ class RepoSQL(
         if (user == FinsUserId.NONE) return resultError(FinsStubs.EMPTY_USER_ID)
         return safeTransaction({
             var isNew = false
-            val dbAccount = AccountsTable.select {
-                AccountsTable.id.eq(item.accountId.asString()) and AccountsTable.userId.eq(user.asString())
-            }
-            if (item.accountId == FinsAccountId.NONE || dbAccount.empty()) isNew = true
+            if (item.accountId == FinsAccountId.NONE ||
+                AccountsTable.select {
+                    AccountsTable.id.eq(item.accountId.asString()) and AccountsTable.userId.eq(user.asString())
+                }.empty()
+            )
+                isNew = true
 
             if (isNew) {
                 UsersTable.insertIgnore {
@@ -65,6 +68,8 @@ class RepoSQL(
                 val resInsert = AccountsTable.insert {
                     if (item.accountId != FinsAccountId.NONE) {
                         it[id] = item.accountId.asString()
+                    } else {
+                        it[id] = UUID.randomUUID().toString()
                     }
                     it[userId] = user.asString()
                     it[name] = item.name
@@ -147,6 +152,8 @@ class RepoSQL(
                 val resInsert = OperationsTable.insert {
                     if (item.operationId != FinsOperationId.NONE) {
                         it[id] = item.operationId.asString()
+                    } else {
+                        it[id] = UUID.randomUUID().toString()
                     }
                     it[userId] = user.asString()
                     it[description] = item.description
@@ -359,15 +366,19 @@ class RepoSQL(
             if (rq.finsHistFilter.toDateTime == Instant.NONE) return@safeTransaction resultError<List<FinsOperation>>(
                 FinsStubs.EMPTY_TO_DATE_TIME
             ).toDbOperationsResponse()
-            val results = OperationsTable.select {
+            val result = OperationsTable.select {
                 (OperationsTable.userId eq rq.userId.asString()) and
-                        ((OperationsTable.fromAccountId eq rq.accountId.asString()) or (OperationsTable.toAccountId eq rq.accountId.asString())) and
-                        ((OperationsTable.operationDateTime greaterEq rq.finsHistFilter.fromDateTime.toString())) and
-                        ((OperationsTable.operationDateTime lessEq rq.finsHistFilter.toDateTime.toString()))
-            }
-            DbResponse<List<FinsOperation>>(result = results.map {
+                        ((OperationsTable.fromAccountId eq rq.accountId.asString()) or (OperationsTable.toAccountId eq rq.accountId.asString()))
+            }.map {
                 OperationsTable.from(it)
-            }, isSuccess = true).toDbOperationsResponse()
+            }.filter {
+                (it.operationDateTime >= rq.finsHistFilter.fromDateTime &&
+                        it.operationDateTime <= rq.finsHistFilter.toDateTime)
+            }
+
+            DbResponse<List<FinsOperation>>(
+                result = result, isSuccess = true
+            ).toDbOperationsResponse()
 
         }, {
             DbOperationsResponse(
@@ -377,7 +388,6 @@ class RepoSQL(
             )
         })
     }
-
 
     override suspend fun operationCreate(rq: DbOperationRequest): DbOperationResponse {
         val operation =
