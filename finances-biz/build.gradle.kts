@@ -17,6 +17,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
 
+                implementation(project(":finances-repo-inmemory"))
                 implementation(project(":finances-common"))
                 implementation(project(":finances-stubs"))
                 implementation("com.github.crowdproj.kotlin-cor:kotlin-cor:$kotlinCorVersion")
@@ -28,6 +29,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
 
+                implementation(project(":finances-repo-inmemory"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
             }
         }

@@ -56,8 +56,20 @@
 3. [finances-common](finances-common) - Модуль с общими классами для модулей проекта. В частности,
    там располагаются внутренние модели и контекст.
 4. [finances-mappers](finances-mappers) - Мапер между внутренними моделями и моделями API
+
+## Фреймворки и транспорты
+
 5. [finances-services](finances-services) - Сервис. Служит оберткой для модуля бизнес-логики. Подключается всеми фреймворками (модулями *-app-*)
 6. [finances-app-ktor](finances-app-ktor) - Приложение на Ktor JVM для запуска API (Rest, Websocket)
-7. [finances-stubs](finances-stubs) - Стабы для ответов сервиса
-8. [finances-biz](finances-biz) - Модуль бизнес-логики приложения
-9. [finances-app-rabbit](finances-app-rabbit) - Микросервис на RabbitMQ
+7. [finances-app-rabbit](finances-app-rabbit) - Микросервис на RabbitMQ
+
+## Модули бизнес-логики
+
+8. [finances-stubs](finances-stubs) - Стабы для ответов сервиса
+9. [finances-biz](finances-biz) - Модуль бизнес-логики приложения
+
+## Хранение, репозитории, базы данных
+
+10. [finances-repo-test](finances-repo-test) - Базовые тесты для репозиториев всех баз данных
+11. [finances-repo-inmemory](finances-repo-inmemory)  - Репозиторий на базе EhCache для тестирования
+12. [finances-storage-postgresql](finances-storage-postgresql) - Репозиторий на базе PostgreSQL
