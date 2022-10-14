@@ -14,6 +14,7 @@ import ru.otus.otuskotlin.sokolova.finances.app.rabbit.config.RabbitExchangeConf
 import ru.otus.otuskotlin.sokolova.finances.app.rabbit.controller.RabbitController
 import ru.otus.otuskotlin.sokolova.finances.app.rabbit.processor.RabbitDirectProcessorV1
 import ru.otus.otuskotlin.sokolova.finances.backend.services.FinsService
+import ru.otus.otuskotlin.sokolova.finances.common.models.FinsSettings
 import ru.otus.otuskotlin.sokolova.finances.stubs.FinsObjectsStub.ACCOUNT_TMP
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -45,7 +46,7 @@ internal class RabbitMqTest {
             port = rabbitMqTestPort
         )
     }
-    val service = FinsService()
+    val service = FinsService(FinsSettings())
     val processor by lazy {
         RabbitDirectProcessorV1(
             config = config,

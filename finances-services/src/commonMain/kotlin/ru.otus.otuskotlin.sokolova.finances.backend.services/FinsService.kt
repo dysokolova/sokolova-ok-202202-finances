@@ -2,10 +2,13 @@ package ru.otus.otuskotlin.sokolova.finances.backend.services
 
 import ru.otus.otuskotlin.sokolova.finances.biz.FinsProcessor
 import ru.otus.otuskotlin.sokolova.finances.common.FinsContext
+import ru.otus.otuskotlin.sokolova.finances.common.models.FinsSettings
 
 
-class FinsService {
-    private val processor = FinsProcessor()
+class FinsService (
+    val settings: FinsSettings
+) {
+    private val processor = FinsProcessor(settings)
 
     suspend fun exec(context: FinsContext) = processor.exec(context)
 

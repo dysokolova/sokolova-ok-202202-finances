@@ -11,4 +11,8 @@ data class FinsHistFilter(
         fromDateTime = this@FinsHistFilter.fromDateTime,
         toDateTime = this@FinsHistFilter.toDateTime
     )
+
+    companion object {
+        val NONE = FinsHistFilter(fromDateTime = Instant.NONE, toDateTime = Instant.NONE)
+    }
 }

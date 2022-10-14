@@ -26,9 +26,13 @@ fun FinsContext.fromTransport(request: IRequest) = when (request) {
 
 private fun String?.toUserId() = this?.let { FinsUserId(it) } ?: FinsUserId.NONE
 private fun String?.toAccountId() = this?.let { FinsAccountId(it) } ?: FinsAccountId.NONE
+private fun String?.toAccountLock() = this?.let { FinsAccountLock(it) } ?: FinsAccountLock.NONE
 private fun String?.toOperationId() = this?.let { FinsOperationId(it) } ?: FinsOperationId.NONE
+private fun String?.toOperationLock() = this?.let { FinsOperationLock(it) } ?: FinsOperationLock.NONE
 private fun AccountId?.toAccountWithId() = FinsAccount(accountId = this?.accountId.toAccountId())
+private fun AccountDelId?.toAccountWithId() = FinsAccount (accountId = this?.accountId.toAccountId(), accountLock = this?.accountLock.toAccountLock())
 private fun OperationId?.toOperationWithId() = FinsOperation(operationId = this?.operationId.toOperationId())
+private fun OperationDelId?.toOperationWithId() = FinsOperation (operationId = this?.operationId.toOperationId(), operationLock = this?.operationLock.toOperationLock())
 private fun IRequest?.requestId() = this?.requestId?.let { FinsRequestId(it) } ?: FinsRequestId.NONE
 
 private fun Debug?.transportToWorkMode(): FinsWorkMode = when (this?.mode) {
@@ -65,6 +69,10 @@ private fun Debug?.transportToStubCase(): FinsStubs = when (this?.stub) {
     RequestDebugStubs.BAD_FORMAT_OPERATION_ID -> FinsStubs.BAD_FORMAT_OPERATION_ID
     RequestDebugStubs.EMPTY_OPERATION_ID -> FinsStubs.EMPTY_OPERATION_ID
     RequestDebugStubs.NOT_FOUND_OPERATION_ID -> FinsStubs.NOT_FOUND_OPERATION_ID
+    RequestDebugStubs.ERROR_ACCOUNT_CONCURENT_ON_CHANGE -> FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_CHANGE
+    RequestDebugStubs.ERROR_ACCOUNT_CONCURENT_ON_DELETE -> FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_DELETE
+    RequestDebugStubs.ERROR_OPERATION_CONCURENT_ON_CHANGE -> FinsStubs.ERROR_OPERATION_CONCURENT_ON_CHANGE
+    RequestDebugStubs.ERROR_OPERATION_CONCURENT_ON_DELETE -> FinsStubs.ERROR_OPERATION_CONCURENT_ON_DELETE
     RequestDebugStubs.DB_ERROR -> FinsStubs.DB_ERROR
     RequestDebugStubs.CANNOT_DELETE -> FinsStubs.CANNOT_DELETE
 
@@ -106,6 +114,7 @@ fun FinsContext.fromTransport(request: AccountDeleteRequest) {
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
+
 
 fun FinsContext.fromTransport(request: AccountSearchRequest) {
     command = FinsCommand.ACCOUNTSEARCH
@@ -177,6 +186,7 @@ private fun Account.toInternal(errors: MutableList<FinsError>) = FinsAccount(
     name = this.name ?: "",
     amount = this.amount.toDoubleWithValidation("amount", errors),
     accountId = this.accountId.toAccountId(),
+    accountLock = this.accountLock.toAccountLock(),
 )
 
 private fun AccountData.toInternal(errors: MutableList<FinsError>) = FinsAccount(
@@ -192,6 +202,7 @@ private fun Operation.toInternal(errors: MutableList<FinsError>) = FinsOperation
     toAccountId = this.toAccountId.toAccountId(),
     operationDateTime = this.operationDateTime.toInstantWithValidation("operationDateTime", errors),
     operationId = this.operationId.toOperationId(),
+    operationLock = this.operationLock.toOperationLock(),
 )
 
 private fun OperationData.toInternal(errors: MutableList<FinsError>) = FinsOperation(

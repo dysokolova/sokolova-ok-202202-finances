@@ -8,7 +8,6 @@ import kotlin.test.assertEquals
 class SerializationResponseTest {
     val createResponse = AccountCreateResponse(
         account = Account(
-            userId = "1",
             name = "Тинёк-осн",
             description = "основной счет в Тинькофф",
             amount = "0.0"
@@ -28,7 +27,6 @@ class SerializationResponseTest {
         val jsonString = apiV1ResponseSerialize(createResponse)
         val decoded = apiV1ResponseDeserialize<AccountCreateResponse>(jsonString)
         println(decoded)
-        assertEquals("1", decoded.account?.userId)
         assertEquals("Тинёк-осн", decoded.account?.name)
         assertEquals("основной счет в Тинькофф", decoded.account?.description)
         assertEquals("0.0", decoded.account?.amount)
@@ -39,7 +37,6 @@ class SerializationResponseTest {
         val jsonString = apiV1ResponseSerialize(createResponse)
         val decoded = apiV1ResponseDeserialize<IResponse>(jsonString) as AccountCreateResponse
         println(decoded)
-        assertEquals("1", decoded.account?.userId)
         assertEquals("Тинёк-осн", decoded.account?.name)
         assertEquals("основной счет в Тинькофф", decoded.account?.description)
         assertEquals("0.0", decoded.account?.amount)

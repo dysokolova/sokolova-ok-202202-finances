@@ -3,8 +3,11 @@ package ru.otus.otuskotlin.sokolova.finances
 import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
+import io.ktor.server.config.*
+import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
 import io.ktor.server.locations.*
+import io.ktor.server.netty.*
 import io.ktor.server.plugins.autohead.*
 import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.callloging.*
@@ -20,12 +23,28 @@ import ru.otus.otuskotlin.sokolova.finances.api.v1
 import ru.otus.otuskotlin.sokolova.finances.api.v1.finsWsHandlerV1
 import ru.otus.otuskotlin.sokolova.finances.backend.services.FinsService
 import ru.otus.otuskotlin.sokolova.finances.common.KtorUserSession
+import ru.otus.otuskotlin.sokolova.finances.common.models.FinsSettings
+import ru.otus.otuskotlin.sokolova.finances.backend.repository.inmemory.RepoInMemory
+import ru.otus.otuskotlin.sokolova.finances.backend.repo.postgresql.RepoSQL
 
-// function with config (application.conf)
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main() {
+    embeddedServer(Netty, environment = applicationEngineEnvironment {
+        config = MapApplicationConfig()
+        module {
+            module()
+        }
 
-@Suppress("unused") // Referenced in application.conf
-fun Application.module() {
+        connector {
+            port = 8080
+            host = "0.0.0.0"
+        }
+    }).start(true)
+}
+
+@Suppress("unused")
+fun Application.module(
+    settings: FinsSettings? = null,
+) {
     // Generally not needed as it is replaced by a `routing`
     install(Routing)
 
@@ -51,14 +70,15 @@ fun Application.module() {
         }
     }
 
-
-    install(CallLogging) {
-        level = Level.INFO
+    val corSettings by lazy {
+        settings ?: FinsSettings(
+            repoTest = RepoInMemory(),
+            repoProd = RepoSQL(url = "jdbc:postgresql://postgresql:5432/financesdevdb")
+            //     repoProd = RepoSQL()
+        )
     }
 
-    install(Locations)
-
-    val finsService = FinsService()
+    val finsService by lazy { FinsService(corSettings) }
     val sessions = mutableSetOf<KtorUserSession>()
 
     routing {

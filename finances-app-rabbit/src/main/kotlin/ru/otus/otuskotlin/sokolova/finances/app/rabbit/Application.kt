@@ -5,10 +5,13 @@ import ru.otus.otuskotlin.sokolova.finances.app.rabbit.config.RabbitExchangeConf
 import ru.otus.otuskotlin.sokolova.finances.app.rabbit.controller.RabbitController
 import ru.otus.otuskotlin.sokolova.finances.app.rabbit.processor.RabbitDirectProcessorV1
 import ru.otus.otuskotlin.sokolova.finances.backend.services.FinsService
+import ru.otus.otuskotlin.sokolova.finances.backend.repository.inmemory.RepoInMemory
+import ru.otus.otuskotlin.sokolova.finances.common.models.FinsSettings
 
 fun main() {
+    val settings = FinsSettings()
     val config = RabbitConfig()
-    val service = FinsService()
+    val service = FinsService(settings)
 
     val producerConfig = RabbitExchangeConfiguration(
         keyIn = "in-v1",

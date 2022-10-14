@@ -7,13 +7,13 @@ Content-Type: application/json
   "UserId": "e2df239d-a946-46a4-b967-5f19f02b37ae",
   "requestType": "accountCreate",
   "debug": {
-    "mode": "stub",
+    "mode": "prod",
     "stub": "success"
   },
   "account": {
     "Name": "Name",
     "Description": "Description",
-    "Amount": "100с яБ<"
+    "Amount": "10.0"
   }
 }
 

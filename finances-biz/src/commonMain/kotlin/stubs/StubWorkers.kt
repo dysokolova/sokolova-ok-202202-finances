@@ -88,6 +88,19 @@ fun ICorChainDsl<FinsContext>.stubNotFoundOperationId(title: String) =
     this.stubWorker(title, FinsStubs.NOT_FOUND_OPERATION_ID)
 
 
+fun ICorChainDsl<FinsContext>.stubErrorAccountConcurentOnChange(title: String) =
+    this.stubWorker(title, FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_CHANGE)
+
+fun ICorChainDsl<FinsContext>.stubErrorAccountConcurentOnDelete(title: String) =
+    this.stubWorker(title, FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_DELETE)
+
+fun ICorChainDsl<FinsContext>.stubErrorOperationConcurentOnChange(title: String) =
+    this.stubWorker(title, FinsStubs.ERROR_OPERATION_CONCURENT_ON_CHANGE)
+
+fun ICorChainDsl<FinsContext>.stubErrorOperationConcurentOnDelete(title: String) =
+    this.stubWorker(title, FinsStubs.ERROR_OPERATION_CONCURENT_ON_DELETE)
+
+
 fun ICorChainDsl<FinsContext>.stubDbError(title: String) = this.stubWorker(title, FinsStubs.DB_ERROR)
 fun ICorChainDsl<FinsContext>.stubCannotDelete(title: String) = this.stubWorker(title, FinsStubs.CANNOT_DELETE)
 fun ICorChainDsl<FinsContext>.stubNoCase(title: String) = worker {

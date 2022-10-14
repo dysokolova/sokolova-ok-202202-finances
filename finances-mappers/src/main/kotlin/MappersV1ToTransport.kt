@@ -104,6 +104,7 @@ private fun FinsAccount.toTransport(): Account = Account(
     description = description.takeIf { it.isNotBlank() },
     amount = amount.takeIf { !it.isNaN() }?.toString(),
     accountId = accountId.takeIf { it != FinsAccountId.NONE }?.asString(),
+    accountLock = accountLock.takeIf { it != FinsAccountLock.NONE }?.asString(),
 )
 
 private fun Account.toObj(): AccountObj = AccountObj(
@@ -124,6 +125,7 @@ private fun FinsOperation.toTransport(): Operation = Operation(
     toAccountId = toAccountId.takeIf { it != FinsAccountId.NONE }?.asString(),
     operationDateTime = operationDateTime.takeIf { it != Instant.NONE }?.toString(),
     operationId = operationId.takeIf { it != FinsOperationId.NONE }?.asString(),
+    operationLock = operationLock.takeIf { it != FinsOperationLock.NONE }?.asString(),
 )
 
 

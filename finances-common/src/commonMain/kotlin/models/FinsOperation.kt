@@ -10,6 +10,7 @@ data class FinsOperation(
     var toAccountId: FinsAccountId = FinsAccountId.NONE,
     var operationDateTime:  Instant = Instant.NONE,
     var operationId: FinsOperationId = FinsOperationId.NONE,
+    var operationLock: FinsOperationLock = FinsOperationLock.NONE,
 ){
     fun deepCopy(
     ) = FinsOperation(
@@ -18,7 +19,8 @@ data class FinsOperation(
         fromAccountId = this@FinsOperation.fromAccountId,
         toAccountId = this@FinsOperation.toAccountId,
         operationDateTime = this@FinsOperation.operationDateTime,
-        operationId = this@FinsOperation.operationId
+        operationId = this@FinsOperation.operationId,
+        operationLock = this@FinsOperation.operationLock
     )
 }
 

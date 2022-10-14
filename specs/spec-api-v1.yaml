@@ -5,7 +5,7 @@ info:
 возможность хранения актуального состояния и истории изменения счетов, возможность получения отчетов по изменениям счетов за период.'
   version: 1.0.0
 servers:
-  - url: http://localhost/finances-api
+  - url: http://localhost:8080/v1
 tags:
   - name: account
     description: Счёт
@@ -269,6 +269,10 @@ components:
         - badFormatOperationId
         - emptyOperationId
         - notFoundOperationId
+        - ErrorAccountConcurentOnChange
+        - ErrorAccountConcurentOnDelete
+        - ErrorOperationConcurentOnChange
+        - ErrorOperationConcurentOnDelete
         - dbError
         - cannotDelete
 
@@ -403,6 +407,19 @@ components:
           type: string
           description: Идентификатор счёта
 
+    AccountLock:
+      type: object
+      description: Оптимистичная блокировка для счёта
+      properties:
+        AccountLock:
+          type: string
+          description: Оптимистичная блокировка для счёта, характеризующая его версию
+
+    AccountDelId:
+      allOf:
+        - $ref: '#/components/schemas/AccountId'
+        - $ref: '#/components/schemas/AccountLock'
+
     AccountIdObj:
       type: object
       description: Счёт - только идентификатор
@@ -410,10 +427,18 @@ components:
         account:
           $ref: '#/components/schemas/AccountId'
 
+    AccountDelIdObj:
+      type: object
+      description: Счёт и блокировка для удаления
+      properties:
+        account:
+          $ref: '#/components/schemas/AccountDelId'
+
     Account:
       allOf:
         - $ref: '#/components/schemas/AccountData'
         - $ref: '#/components/schemas/AccountId'
+        - $ref: '#/components/schemas/AccountLock'
       description: Счёт
 
     AccountObj:
@@ -422,7 +447,6 @@ components:
         account:
           $ref: '#/components/schemas/Account'
       description: Счёт
-
 
     OperationData:
       type: object
@@ -451,7 +475,6 @@ components:
         operation:
           $ref: '#/components/schemas/OperationData'
 
-
     OperationId:
       type: object
       description: Идентификатор операции
@@ -467,10 +490,18 @@ components:
         operation:
           $ref: '#/components/schemas/OperationId'
 
+    OperationDelIdObj:
+      type: object
+      description: Операция и блокировка для удаления
+      properties:
+        operation:
+          $ref: '#/components/schemas/OperationDelId'
+
     Operation:
       allOf:
         - $ref: '#/components/schemas/OperationData'
         - $ref: '#/components/schemas/OperationId'
+        - $ref: '#/components/schemas/OperationLock'
       description: Операция
 
     OperationObj:
@@ -480,6 +511,18 @@ components:
           $ref: '#/components/schemas/Operation'
       description: Операция
 
+    OperationLock:
+      type: object
+      description: Оптимистичная блокировка для операции
+      properties:
+        OperationLock:
+          type: string
+          description: Оптимистичная блокировка для операции, характеризующая её версию
+
+    OperationDelId:
+      allOf:
+        - $ref: '#/components/schemas/OperationId'
+        - $ref: '#/components/schemas/OperationLock'
 
     AccountCreateRequest:
       allOf:
@@ -506,7 +549,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/IRequest'
         - $ref: '#/components/schemas/RequestDebug'
-        - $ref: '#/components/schemas/AccountIdObj'
+        - $ref: '#/components/schemas/AccountDelIdObj'
       description: Запрос удаления счёта
 
     AccountSearchRequest:
@@ -601,7 +644,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/IRequest'
         - $ref: '#/components/schemas/RequestDebug'
-        - $ref: '#/components/schemas/OperationIdObj'
+        - $ref: '#/components/schemas/OperationDelIdObj'
       description: Запрос удаления операции
 
 

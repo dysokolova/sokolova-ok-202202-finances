@@ -2,6 +2,7 @@ package ru.otus.otuskotlin.sokolova.finances.common.stubs.errors
 
 import ru.otus.otuskotlin.sokolova.finances.biz.errors.*
 import ru.otus.otuskotlin.sokolova.finances.common.FinsContext
+import ru.otus.otuskotlin.sokolova.finances.common.helpers.errorConcurrency
 import ru.otus.otuskotlin.sokolova.finances.common.helpers.notFound
 import ru.otus.otuskotlin.sokolova.finances.common.models.FinsError
 import ru.otus.otuskotlin.sokolova.finances.common.stubs.FinsStubs
@@ -21,6 +22,10 @@ fun FinsContext.getText(finsStub: FinsStubs): String {
         FinsStubs.BAD_FORMAT_OPERATION_DATE_TIME -> operationRequest.operationDateTime.toString()
         FinsStubs.BAD_FORMAT_OPERATION_ID -> operationRequest.operationId.asString()
         FinsStubs.NOT_FOUND_OPERATION_ID -> operationRequest.operationId.asString()
+        FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_CHANGE -> accountRequest.accountLock.asString()
+        FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_DELETE -> accountRequest.accountLock.asString()
+        FinsStubs.ERROR_OPERATION_CONCURENT_ON_CHANGE -> operationRequest.operationLock.asString()
+        FinsStubs.ERROR_OPERATION_CONCURENT_ON_DELETE -> operationRequest.operationLock.asString()
         else -> ""
     }
     return text
@@ -55,6 +60,10 @@ fun FinsStubs.getError(value: String = ""): FinsError? {
         FinsStubs.BAD_FORMAT_OPERATION_ID -> text.idValidationError("operationId")
         FinsStubs.EMPTY_OPERATION_ID -> emptyValidationError("operationId")
         FinsStubs.NOT_FOUND_OPERATION_ID -> text.notFound("operationId")
+        FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_CHANGE -> text.errorConcurrency("accountLock", "change")
+        FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_DELETE -> text.errorConcurrency("accountLock", "delete")
+        FinsStubs.ERROR_OPERATION_CONCURENT_ON_CHANGE -> text.errorConcurrency("operationLock", "change")
+        FinsStubs.ERROR_OPERATION_CONCURENT_ON_DELETE -> text.errorConcurrency("operationLock", "delete")
         FinsStubs.DB_ERROR -> FinsError(
             group = "internal",
             code = "internal-db",
@@ -104,6 +113,10 @@ fun FinsStubs.getStubName(): String {
         FinsStubs.NOT_FOUND_OPERATION_ID -> "notFoundOperationId"
         FinsStubs.DB_ERROR -> "dbError"
         FinsStubs.CANNOT_DELETE -> "cannotDelete"
+        FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_CHANGE -> "ErrorAccountConcurentOnChange"
+        FinsStubs.ERROR_ACCOUNT_CONCURENT_ON_DELETE -> "ErrorAccountConcurentOnDelete"
+        FinsStubs.ERROR_OPERATION_CONCURENT_ON_CHANGE -> "ErrorOperationConcurentOnChange"
+        FinsStubs.ERROR_OPERATION_CONCURENT_ON_DELETE -> "ErrorOperationConcurentOnDelete"
         else -> ""
     }
 }
